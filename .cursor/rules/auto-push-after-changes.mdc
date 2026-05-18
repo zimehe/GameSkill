@@ -1,0 +1,17 @@
+---
+description: Automatically commit and push completed project changes
+alwaysApply: true
+---
+
+# Auto Push After Changes
+
+When an implementation or file-editing task is complete:
+
+- Run the relevant validation checks for the changed files when practical.
+- Review `git status` and `git diff` before committing.
+- Do not commit secrets, tokens, credentials, `project.private.config.json`, or generated dependency folders.
+- Create a concise commit that explains the completed change.
+- Push the current branch to its configured upstream remote after the commit succeeds.
+- If push fails because of authentication or permissions, report the exact blocker and leave the local commit intact.
+
+If the user explicitly asks not to commit or push, follow that newer instruction instead.
