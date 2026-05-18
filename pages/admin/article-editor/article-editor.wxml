@@ -1,0 +1,57 @@
+<view class="editor-page page-shell">
+  <view class="title">编辑攻略</view>
+  <view wx:if="{{loading}}" class="loading-state">正在加载编辑器...</view>
+
+  <block wx:else>
+    <view class="field">
+      <view class="label">标题</view>
+      <input class="input" value="{{article.title}}" data-field="title" bindinput="handleInput" placeholder="输入攻略标题" />
+    </view>
+
+    <view class="field">
+      <view class="label">游戏</view>
+      <picker mode="selector" range="{{games}}" range-key="name" bindchange="handleGameChange">
+        <view class="picker">{{article.gameName || '选择游戏'}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="label">分类</view>
+      <picker mode="selector" range="{{categories}}" range-key="name" bindchange="handleCategoryChange">
+        <view class="picker">{{article.categoryId || '选择分类'}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="label">摘要</view>
+      <textarea class="textarea" value="{{article.summary}}" data-field="summary" bindinput="handleInput" placeholder="一句话说明这篇攻略解决什么问题" />
+    </view>
+
+    <view class="field">
+      <view class="label">标签</view>
+      <input class="input" value="{{article.tagsText}}" data-field="tagsText" bindinput="handleInput" placeholder="用逗号分隔，如 作物，收益" />
+    </view>
+
+    <view class="field">
+      <view class="label">封面图 URL</view>
+      <input class="input" value="{{article.coverImage}}" data-field="coverImage" bindinput="handleInput" placeholder="可留空" />
+    </view>
+
+    <view class="field">
+      <view class="label">长图 URL，每行一个</view>
+      <textarea class="textarea" value="{{article.imageUrlsText}}" data-field="imageUrlsText" bindinput="handleInput" placeholder="https://..." />
+    </view>
+
+    <view class="field">
+      <view class="label">正文 HTML</view>
+      <textarea class="textarea content" value="{{article.contentHtml}}" data-field="contentHtml" bindinput="handleInput" placeholder="<h2>标题</h2><p>正文...</p>" />
+    </view>
+
+    <view class="publish-row">
+      <view>发布状态</view>
+      <switch checked="{{article.status === 'published'}}" bindchange="handleStatusChange" />
+    </view>
+
+    <button class="save-button" bindtap="saveArticle">保存攻略</button>
+  </block>
+</view>

@@ -1,0 +1,9 @@
+{
+  "name": "seedContent",
+  "version": "1.0.0",
+  "description": "Seed V2 content for 云玩家游客图鉴",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

@@ -1,0 +1,33 @@
+page {
+  min-height: 100vh;
+  background: #f5f2ea;
+  color: #18212c;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+view,
+text,
+button,
+input {
+  box-sizing: border-box;
+}
+
+.page-shell {
+  min-height: 100vh;
+  padding: 40rpx 32rpx;
+}
+
+.muted {
+  color: #76808f;
+}
+
+.empty-state,
+.loading-state {
+  margin-top: 40rpx;
+  padding: 40rpx 28rpx;
+  border: 1rpx solid rgba(24, 33, 44, 0.08);
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.72);
+  color: #76808f;
+  text-align: center;
+}

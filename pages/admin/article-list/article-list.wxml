@@ -1,0 +1,21 @@
+<view class="admin-list page-shell">
+  <view class="top-row">
+    <view>
+      <view class="eyebrow">ADMIN</view>
+      <view class="title">攻略列表</view>
+    </view>
+    <view class="create-button" bindtap="createArticle">新增</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">正在加载...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+
+  <view wx:else>
+    <view wx:for="{{articles}}" wx:key="_id" class="article-card" data-id="{{item._id}}" bindtap="editArticle">
+      <view class="status">{{item.status}}</view>
+      <view class="article-title">{{item.title}}</view>
+      <view class="article-meta">{{item.gameName}} · {{item.updatedAt}} · {{item.viewCount}} 浏览</view>
+      <view class="article-summary">{{item.summary}}</view>
+    </view>
+  </view>
+</view>

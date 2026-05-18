@@ -1,0 +1,71 @@
+<view class="detail-page page-shell">
+  <view wx:if="{{loading}}" class="loading-state">正在加载攻略正文...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+
+  <block wx:else>
+    <view class="article-head">
+      <view class="game-tag">{{article.gameName}}</view>
+      <view class="article-title">{{article.title}}</view>
+      <view class="article-meta">{{article.publishedAt}} · {{article.authorNote || '本文整理自网络，侵删'}}</view>
+      <view class="article-summary">{{article.summary}}</view>
+      <view class="tag-row">
+        <view wx:for="{{article.tags}}" wx:key="*this" class="tag">{{item}}</view>
+      </view>
+      <view class="stat-row">
+        <view>{{article.viewCount}} 浏览</view>
+        <view>{{article.favoriteCount}} 收藏</view>
+        <view>{{article.shareCount}} 分享</view>
+      </view>
+    </view>
+
+    <view class="action-row">
+      <view class="action-button {{favorited ? 'action-active' : ''}}" bindtap="toggleFavorite">
+        {{favorited ? '已收藏' : '收藏'}}
+      </view>
+      <button class="share-button" open-type="share">分享</button>
+      <view class="action-button" bindtap="copyTitle">复制标题</view>
+    </view>
+
+    <image
+      wx:if="{{article.coverImage}}"
+      class="hero-image"
+      src="{{article.coverImage}}"
+      mode="aspectFill"
+      data-current="{{article.coverImage}}"
+      bindtap="previewImage"
+    ></image>
+
+    <view class="content-card">
+      <rich-text class="rich-content" nodes="{{article.contentHtml}}"></rich-text>
+    </view>
+
+    <view wx:if="{{article.imageUrls.length > 0}}" class="image-section">
+      <view class="section-title">图鉴 / 长图预览</view>
+      <image
+        wx:for="{{article.imageUrls}}"
+        wx:key="*this"
+        class="guide-image"
+        src="{{item}}"
+        mode="widthFix"
+        data-current="{{item}}"
+        bindtap="previewImage"
+      ></image>
+    </view>
+
+    <view wx:if="{{relatedArticles.length > 0}}" class="related-section">
+      <view class="section-title">相关推荐</view>
+      <view
+        wx:for="{{relatedArticles}}"
+        wx:key="_id"
+        class="related-card"
+        data-id="{{item._id}}"
+        bindtap="openRelated"
+      >
+        <view class="related-title">{{item.title}}</view>
+        <view class="related-meta">{{item.gameName}} · {{item.updatedAt}}</view>
+      </view>
+    </view>
+
+    <button class="back-button" bindtap="goBack">返回目录</button>
+  </block>
+</view>

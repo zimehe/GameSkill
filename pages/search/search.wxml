@@ -1,0 +1,38 @@
+<view class="search-page page-shell">
+  <view class="search-head">
+    <view class="eyebrow">全站检索</view>
+    <view class="title">找到你要的攻略</view>
+    <view class="search-box">
+      <input
+        class="search-input"
+        placeholder="输入角色、宠物、作物、材料"
+        value="{{keyword}}"
+        confirm-type="search"
+        bindinput="handleInput"
+        bindconfirm="submitSearch"
+      />
+      <view class="search-button" bindtap="submitSearch">搜索</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">正在搜索...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+  <view wx:elif="{{searched && results.length === 0}}" class="empty-state">没有搜到相关攻略，换个关键词试试。</view>
+
+  <view wx:else class="result-list">
+    <view
+      wx:for="{{results}}"
+      wx:key="_id"
+      class="result-card"
+      data-id="{{item._id}}"
+      bindtap="openArticle"
+    >
+      <view class="result-game">{{item.gameName}}</view>
+      <view class="result-title">{{item.title}}</view>
+      <view class="result-summary">{{item.summary}}</view>
+      <view class="tag-row">
+        <view wx:for="{{item.tags}}" wx:key="*this" class="tag">{{item}}</view>
+      </view>
+    </view>
+  </view>
+</view>

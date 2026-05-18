@@ -1,0 +1,57 @@
+<view class="category-page page-shell">
+  <view wx:if="{{loading}}" class="loading-state">正在加载攻略目录...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+
+  <block wx:else>
+    <view class="game-header">
+      <view class="eyebrow">攻略目录</view>
+      <view class="game-title">{{game.name}}</view>
+      <view class="game-subtitle">{{game.subtitle}}</view>
+    </view>
+
+    <scroll-view class="tabs" scroll-x enhanced show-scrollbar="{{false}}">
+      <view
+        wx:for="{{categories}}"
+        wx:key="_id"
+        class="tab {{activeCategoryId === item._id ? 'tab-active' : ''}}"
+        data-id="{{item._id}}"
+        bindtap="handleTabTap"
+      >
+        <view class="tab-name">{{item.name}}</view>
+        <view class="tab-desc">{{item.description}}</view>
+      </view>
+    </scroll-view>
+
+    <view class="sort-row">
+      <view class="sort-pill {{sortMode === 'default' ? 'sort-active' : ''}}" data-mode="default" bindtap="handleSortTap">默认</view>
+      <view class="sort-pill {{sortMode === 'latest' ? 'sort-active' : ''}}" data-mode="latest" bindtap="handleSortTap">最新</view>
+      <view class="sort-pill {{sortMode === 'hot' ? 'sort-active' : ''}}" data-mode="hot" bindtap="handleSortTap">热门</view>
+    </view>
+
+    <view wx:if="{{filteredArticles.length === 0}}" class="empty-state">
+      这个分类还没有攻略，先去云数据库补一篇吧。
+    </view>
+
+    <view wx:else class="article-list">
+      <view
+        wx:for="{{filteredArticles}}"
+        wx:key="_id"
+        class="article-card"
+        data-id="{{item._id}}"
+        bindtap="handleArticleTap"
+      >
+        <image wx:if="{{item.coverImage}}" class="article-cover" src="{{item.coverImage}}" mode="aspectFill"></image>
+        <view wx:else class="article-cover placeholder-cover">{{item.titleInitial}}</view>
+
+        <view class="article-main">
+          <view class="article-title">{{item.title}}</view>
+          <view class="article-summary">{{item.summary}}</view>
+          <view class="tag-row">
+            <view wx:for="{{item.tags}}" wx:key="*this" class="tag">{{item}}</view>
+          </view>
+          <view class="article-meta">{{item.updatedAt}} · {{item.viewCount}} 浏览</view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

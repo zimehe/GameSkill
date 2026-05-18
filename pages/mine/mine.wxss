@@ -1,0 +1,86 @@
+.mine-page {
+  background:
+    radial-gradient(circle at 92% 0%, rgba(242, 198, 109, 0.28), transparent 30%),
+    #f5f2ea;
+}
+
+.mine-head {
+  padding-bottom: 28rpx;
+}
+
+.eyebrow {
+  color: #b07a22;
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+}
+
+.title {
+  margin-top: 16rpx;
+  color: #18212c;
+  font-size: 52rpx;
+  font-weight: 900;
+}
+
+.subtitle {
+  margin-top: 12rpx;
+  color: #66717f;
+  font-size: 26rpx;
+}
+
+.tab-row {
+  display: flex;
+  margin-bottom: 26rpx;
+  padding: 8rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.tab {
+  flex: 1;
+  padding: 18rpx 0;
+  border-radius: 999rpx;
+  color: #76808f;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+.active {
+  background: #10161f;
+  color: #fff8e9;
+  font-weight: 800;
+}
+
+.clear-button {
+  margin-bottom: 18rpx;
+  color: #b07a22;
+  font-size: 24rpx;
+  text-align: right;
+}
+
+.article-card {
+  margin-bottom: 18rpx;
+  padding: 26rpx;
+  border: 1rpx solid rgba(24, 33, 44, 0.08);
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14rpx 34rpx rgba(31, 43, 58, 0.07);
+}
+
+.article-title {
+  color: #18212c;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.article-meta {
+  margin-top: 10rpx;
+  color: #8a6b39;
+  font-size: 22rpx;
+}
+
+.article-summary {
+  margin-top: 12rpx;
+  color: #66717f;
+  font-size: 24rpx;
+  line-height: 1.5;
+}

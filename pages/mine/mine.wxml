@@ -1,0 +1,40 @@
+<view class="mine-page page-shell">
+  <view class="mine-head">
+    <view class="eyebrow">个人工具箱</view>
+    <view class="title">我的图鉴</view>
+    <view class="subtitle">收藏常查攻略，回到上次浏览位置。</view>
+  </view>
+
+  <view class="tab-row">
+    <view class="tab {{activeTab === 'favorites' ? 'active' : ''}}" data-tab="favorites" bindtap="switchTab">
+      收藏 {{favorites.length}}
+    </view>
+    <view class="tab {{activeTab === 'history' ? 'active' : ''}}" data-tab="history" bindtap="switchTab">
+      历史 {{history.length}}
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">正在读取...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+
+  <block wx:else>
+    <view wx:if="{{activeTab === 'favorites'}}">
+      <view wx:if="{{favorites.length === 0}}" class="empty-state">还没有收藏，去详情页点一下收藏吧。</view>
+      <view wx:for="{{favorites}}" wx:key="_id" class="article-card" data-id="{{item._id}}" bindtap="openArticle">
+        <view class="article-title">{{item.title}}</view>
+        <view class="article-meta">{{item.gameName}} · {{item.updatedAt}}</view>
+        <view class="article-summary">{{item.summary}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{activeTab === 'history'}}">
+      <view wx:if="{{history.length > 0}}" class="clear-button" bindtap="clearHistory">清空浏览历史</view>
+      <view wx:if="{{history.length === 0}}" class="empty-state">还没有浏览记录。</view>
+      <view wx:for="{{history}}" wx:key="_id" class="article-card" data-id="{{item._id}}" bindtap="openArticle">
+        <view class="article-title">{{item.title}}</view>
+        <view class="article-meta">{{item.gameName}} · 最近看过</view>
+        <view class="article-summary">{{item.summary}}</view>
+      </view>
+    </view>
+  </block>
+</view>

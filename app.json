@@ -1,0 +1,22 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/search/search",
+    "pages/category/category",
+    "pages/detail/detail",
+    "pages/mine/mine",
+    "pages/admin/index/index",
+    "pages/admin/article-list/article-list",
+    "pages/admin/article-editor/article-editor"
+  ],
+  "window": {
+    "navigationBarTitleText": "云玩家游客图鉴",
+    "navigationBarBackgroundColor": "#10161f",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f2ea",
+    "backgroundTextStyle": "dark"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}
