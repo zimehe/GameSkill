@@ -1,0 +1,9 @@
+{
+  "name": "rkImport",
+  "version": "1.0.0",
+  "description": "批量导入洛克王国 9 个 rk_* 集合（数据随云函数一起部署，触发一次即可灌库）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

@@ -5,10 +5,13 @@
   "description": "把 utils/data + utils/assets 灌入 CloudBase 的本地 ETL 脚本",
   "scripts": {
     "derive": "node derive.js",
+    "to-jsonl": "node toJsonLines.js",
+    "build-import-fn": "node buildImportFunction.js",
     "upload-assets": "node uploadAssets.js",
     "upload-data": "node uploadData.js",
     "seed-articles": "node seedArticles.js",
-    "all": "node derive.js && node uploadAssets.js && node uploadData.js && node seedArticles.js"
+    "all": "node derive.js && node uploadAssets.js && node uploadData.js && node seedArticles.js",
+    "wechat-prep": "node derive.js && node toJsonLines.js && node buildImportFunction.js"
   },
   "dependencies": {
     "@cloudbase/node-sdk": "^3.7.0"

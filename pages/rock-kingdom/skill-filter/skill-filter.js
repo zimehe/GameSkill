@@ -6,7 +6,6 @@ Page({
     moves: [],
     selectedMove: null,
     pets: [],
-    coverMap: {},
     searching: false,
     finding: false,
     errorMessage: ""
@@ -48,19 +47,9 @@ Page({
     try {
       const pets = await rk.findPetsBySkill(moveId);
       this.setData({ pets, finding: false });
-      this.resolveCovers(pets);
     } catch (error) {
       console.error("查询精灵失败", error);
       this.setData({ finding: false, errorMessage: "查询精灵失败。" });
-    }
-  },
-
-  async resolveCovers(list) {
-    const ids = list.map((p) => p.coverImage).filter((id) => id && id.indexOf("cloud://") === 0);
-    if (!ids.length) return;
-    const map = await rk.resolveCloudUrls(ids);
-    if (Object.keys(map).length) {
-      this.setData({ coverMap: { ...this.data.coverMap, ...map } });
     }
   },
 

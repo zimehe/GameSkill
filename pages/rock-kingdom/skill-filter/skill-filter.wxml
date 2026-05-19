@@ -52,8 +52,8 @@
       >
         <view class="pet-cover">
           <image
-            wx:if="{{coverMap[item.coverImage]}}"
-            src="{{coverMap[item.coverImage]}}"
+            wx:if="{{item.coverImage}}"
+            src="{{item.coverImage}}"
             mode="aspectFill"
             class="pet-avatar"
           />

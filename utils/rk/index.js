@@ -25,6 +25,22 @@ function ensureArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
+// 给一条记录补 coverImage：
+// - 如果 record 已经有 coverImage（含 cloud://），直接保留
+// - 否则用 cloudFileIDPrefix + 'rock-kingdom/' + assetPath 拼出 fileID
+function fillCoverImage(record) {
+  if (!record || record.coverImage) return record;
+  if (!record.assetPath) return record;
+  const prefix = getAppState().cloudFileIDPrefix || "";
+  if (!prefix) return record;
+  const normalized = prefix.endsWith("/") ? prefix : `${prefix}/`;
+  return { ...record, coverImage: `${normalized}rock-kingdom/${record.assetPath}` };
+}
+
+function fillCoverList(list) {
+  return list.map(fillCoverImage);
+}
+
 function matchKeyword(item, keyword) {
   if (!keyword) return true;
   const haystack = [
@@ -67,7 +83,7 @@ async function listPets({ keyword = "", typeId = null, sortMode = "id", page = 1
     pool = pool.filter((p) => matchKeyword(p, safeKw));
     pool = sortPets(pool, sortMode);
     const start = (page - 1) * pageSize;
-    return { total: pool.length, list: pool.slice(start, start + pageSize) };
+    return { total: pool.length, list: fillCoverList(pool.slice(start, start + pageSize)) };
   }
 
   const db = getCloudDb();
@@ -100,7 +116,7 @@ async function listPets({ keyword = "", typeId = null, sortMode = "id", page = 1
     collection.where(where).orderBy(orderField, orderDir).skip((page - 1) * pageSize).limit(pageSize).get()
   ]);
 
-  return { total, list: data };
+  return { total, list: fillCoverList(data) };
 }
 
 async function getPet(petId) {
@@ -108,7 +124,7 @@ async function getPet(petId) {
   if (isMockMode()) {
     const pet = mock.pets.find((p) => p.petId === numericId) || null;
     const skills = mock.petSkills.find((p) => p.petId === numericId);
-    return pet ? { ...pet, skills: skills ? skills.movePoolIds : [] } : null;
+    return pet ? fillCoverImage({ ...pet, skills: skills ? skills.movePoolIds : [] }) : null;
   }
   const db = getCloudDb();
   const docId = `rk-pet-${numericId}`;
@@ -117,11 +133,11 @@ async function getPet(petId) {
     db.collection("rk_pet_skills").doc(`rk-pet-skills-${numericId}`).get().catch(() => ({ data: null }))
   ]);
   if (!petRes.data) return null;
-  return {
+  return fillCoverImage({
     _id: docId,
     ...petRes.data,
     skills: skillsRes.data ? (skillsRes.data.movePoolIds || []) : []
-  };
+  });
 }
 
 async function getMovesByIds(moveIds) {
@@ -174,7 +190,7 @@ async function findPetsBySkill(moveId) {
     const petIds = mock.petSkills
       .filter((entry) => entry.movePoolIds.indexOf(targetId) >= 0)
       .map((entry) => entry.petId);
-    return mock.pets.filter((p) => petIds.indexOf(p.petId) >= 0);
+    return fillCoverList(mock.pets.filter((p) => petIds.indexOf(p.petId) >= 0));
   }
 
   const db = getCloudDb();
@@ -191,7 +207,7 @@ async function findPetsBySkill(moveId) {
   const results = await Promise.all(chunks.map((ids) =>
     db.collection("rk_pets").where({ petId: _.in(ids) }).limit(20).get().then((res) => res.data)
   ));
-  return results.flat();
+  return fillCoverList(results.flat());
 }
 
 async function getTypes() {
@@ -218,7 +234,7 @@ async function getTerms() {
 async function getItems({ page = 1, pageSize = 30 } = {}) {
   if (isMockMode()) {
     const start = (page - 1) * pageSize;
-    return { total: mock.items.length, list: mock.items.slice(start, start + pageSize) };
+    return { total: mock.items.length, list: fillCoverList(mock.items.slice(start, start + pageSize)) };
   }
   const db = getCloudDb();
   const collection = db.collection("rk_items");
@@ -226,7 +242,7 @@ async function getItems({ page = 1, pageSize = 30 } = {}) {
     collection.count(),
     collection.orderBy("itemId", "asc").skip((page - 1) * pageSize).limit(pageSize).get()
   ]);
-  return { total, list: data };
+  return { total, list: fillCoverList(data) };
 }
 
 async function resolveCloudUrls(fileIds) {

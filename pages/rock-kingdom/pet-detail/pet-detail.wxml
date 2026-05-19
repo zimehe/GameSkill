@@ -5,7 +5,7 @@
   <block wx:elif="{{pet}}">
     <view class="hero">
       <view class="hero-cover">
-        <image wx:if="{{coverUrl}}" src="{{coverUrl}}" mode="aspectFill" class="hero-image" />
+        <image wx:if="{{pet.coverImage}}" src="{{pet.coverImage}}" mode="aspectFill" class="hero-image" />
         <view wx:else class="hero-fallback">{{(pet.nameZh || pet.name).slice(0,1)}}</view>
       </view>
       <view class="hero-info">

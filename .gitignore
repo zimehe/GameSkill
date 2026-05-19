@@ -9,3 +9,5 @@ utils/assets/
 scripts/rockKingdom/output/
 scripts/rockKingdom/.env
 scripts/rockKingdom/node_modules/
+cloudfunctions/rkImport/data/
+cloudfunctions/rkImport/node_modules/

@@ -47,6 +47,7 @@
 需要上传并部署以下云函数：
 
 - `seedContent`：初始化游戏、分类、攻略和管理员占位数据。
+- `rkImport`：批量灌入洛克王国 9 个 `rk_*` 集合。数据通过 `npm run build-import-fn` 拷到 `cloudfunctions/rkImport/data/` 一起部署，调用 `{}` 一次即可。
 - `getOpenId`：获取当前用户 openid。
 - `toggleFavorite`：收藏/取消收藏。
 - `trackEvent`：记录浏览、分享、搜索和历史。
@@ -80,20 +81,47 @@
 
 这些页面通过 [utils/rk/index.js](utils/rk/index.js) 读数据，未配置云开发时会读 [utils/rk/mock.js](utils/rk/mock.js) 的极小样例（20 只精灵 / 20 个技能 / 18 个属性 / 12 个性格）让首屏直接可用。
 
+> 图标显示原理：精灵 / 道具记录里只存 `assetPath`（云端相对路径）。`app.js → globalData.cloudFileIDPrefix` 配好之后，[utils/rk/index.js](utils/rk/index.js) 会自动给每条记录补出完整的 `cloud://` fileID，`<image>` 标签直接渲染。
+
 在 [pages/category/category.js](pages/category/category.js) 中，当选中 4 个「列表/筛选类」分类（精灵列表、技能列表、技能筛选精灵、克制表）时，列表区会变成「进入图鉴」CTA 卡，跳转到对应专属页。其它洛克王国分类（性格、术语、蛋尺寸等）依然走原有文章 UI。
 
 ## 数据 ETL 脚本（本地一次性执行）
 
-`utils/data/` 与 `utils/assets/` 是「构建源」，不会进 Git、不会进小程序包（已在 `.gitignore` 与 `project.config.json` 的 `packOptions.ignore` 排除）。要把数据灌进 CloudBase，执行：
+`utils/data/` 与 `utils/assets/` 是「构建源」，不会进 Git、不会进小程序包（已在 `.gitignore` 与 `project.config.json` 的 `packOptions.ignore` 排除）。提供两条路径：
+
+### 路径 A（强烈推荐 · 4 步搞定，无需 API 密钥）
+
+利用 `rkImport` 云函数把全部 9 个 `rk_*` 集合一次性灌完：
 
 ```bash
 cd scripts/rockKingdom
-cp .env.example .env       # 填入 TCB_SECRET_ID / TCB_SECRET_KEY / TCB_ENV_ID
-npm install
-npm run all                # = derive → uploadAssets → uploadData → seedArticles
+npm run wechat-prep         # = derive + to-jsonl + build-import-fn
+                            # 数据被拷到 cloudfunctions/rkImport/data/
 ```
 
-详情见 [scripts/rockKingdom/README.md](scripts/rockKingdom/README.md)。
+然后在微信开发者工具里：
+
+1. 云开发 → 数据库 新建 9 个 `rk_*` 集合（`rk_pets` / `rk_moves` / `rk_items` / `rk_types` / `rk_personalities` / `rk_pet_skills` / `rk_terms` / `rk_eggs` / `rk_bloodline`），权限「所有用户可读」。
+2. 右键 `cloudfunctions/rkImport` → 「上传并部署：云端安装依赖」。
+3. 云开发 → 云函数 → `rkImport` → 测试 → event 填 `{}` → 调用。约 10–30 秒返回每个集合的导入条数。
+4. 云开发 → 存储 → 上传文件夹，把 `utils/assets/webp/` 整个上传到云端目录 `rock-kingdom/`。上传完后点开任一图片，复制 File ID 中 `rock-kingdom/...` 之前的前缀，填到 [app.js](app.js) 的 `globalData.cloudFileIDPrefix`。
+
+完成后所有精灵 / 道具 / 技能图标会自动用 `assetPath` 拼出 `cloud://` fileID 直接显示。
+
+### 路径 B（备用 · 控制台逐文件导入）
+
+如果你不想部署云函数，可以在微信控制台「数据库 → 集合 → 导入数据 → JSON」逐个上传 `scripts/rockKingdom/output/import/*.json`。详情见 [scripts/rockKingdom/README.md](scripts/rockKingdom/README.md)。
+
+### 路径 C（需要腾讯云 API 密钥，速度最快）
+
+```bash
+cd scripts/rockKingdom
+cp .env.example .env        # 填入 TCB_SECRET_ID / TCB_SECRET_KEY / TCB_ENV_ID
+npm install
+npm run all                 # = derive → uploadAssets → uploadData → seedArticles
+```
+
+三条路径的完整对比、断点续传、报错排查都在 [scripts/rockKingdom/README.md](scripts/rockKingdom/README.md)。
 
 ## 文章里的 cloud:// 图片
 

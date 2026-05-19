@@ -16,7 +16,6 @@ Page({
     types: [],
     sorts: SORTS,
     pets: [],
-    coverMap: {},
     total: 0,
     page: 1,
     loading: false,
@@ -89,8 +88,6 @@ Page({
         loading: false,
         loadingMore: false
       });
-
-      await this.resolveCovers(list);
     } catch (error) {
       console.error("精灵列表加载失败", error);
       this.setData({
@@ -101,15 +98,6 @@ Page({
             ? "云开发未配置时仅显示样例数据，请在 app.js 填入 cloudEnvId 或开启 useMockData。"
             : "精灵列表加载失败，请稍后再试。"
       });
-    }
-  },
-
-  async resolveCovers(list) {
-    const ids = list.map((pet) => pet.coverImage).filter((id) => id && id.indexOf("cloud://") === 0);
-    if (!ids.length) return;
-    const map = await rk.resolveCloudUrls(ids);
-    if (Object.keys(map).length) {
-      this.setData({ coverMap: { ...this.data.coverMap, ...map } });
     }
   },
 

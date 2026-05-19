@@ -11,7 +11,6 @@ Page({
     petId: 0,
     pet: null,
     moves: [],
-    coverUrl: "",
     activeTab: "stats",
     tabs: TABS,
     loading: true,
@@ -33,7 +32,6 @@ Page({
       }
       this.setData({ pet, loading: false });
       wx.setNavigationBarTitle({ title: pet.nameZh || pet.name || "精灵详情" });
-      this.resolveCover(pet);
       this.loadMoves(pet.skills || []);
     } catch (error) {
       console.error("精灵详情加载失败", error);
@@ -44,14 +42,6 @@ Page({
             ? "云开发未配置，暂时仅可查看 mock 列表中的精灵。"
             : "精灵详情加载失败。"
       });
-    }
-  },
-
-  async resolveCover(pet) {
-    if (!pet.coverImage) return;
-    const map = await rk.resolveCloudUrls([pet.coverImage]);
-    if (map[pet.coverImage]) {
-      this.setData({ coverUrl: map[pet.coverImage] });
     }
   },
 
