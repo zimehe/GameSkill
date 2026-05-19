@@ -1,0 +1,69 @@
+<view class="rk-page page-shell">
+  <view class="rk-head">
+    <view class="eyebrow">洛克王国</view>
+    <view class="title">技能筛选精灵</view>
+    <view class="muted-line">输入技能名，选定后下方列出所有可学该技能的精灵。</view>
+    <view class="search-box">
+      <input
+        class="search-input"
+        placeholder="例如：花香、雷击、霜刃"
+        value="{{keyword}}"
+        confirm-type="search"
+        bindinput="handleInput"
+        bindconfirm="submitSearch"
+      />
+      <view class="search-button" bindtap="submitSearch">搜索</view>
+    </view>
+  </view>
+
+  <view wx:if="{{searching}}" class="loading-state">正在搜索技能...</view>
+
+  <view wx:if="{{moves.length > 0 && !selectedMove}}" class="move-list">
+    <view class="section-title">命中技能 · 选择一个查看精灵</view>
+    <view
+      wx:for="{{moves}}"
+      wx:key="_id"
+      class="move-item"
+      data-id="{{item.moveId}}"
+      bindtap="handleMoveTap"
+    >
+      <view class="move-name">{{item.nameZh || item.name}}</view>
+      <view class="move-meta">{{item.typeNameZh || '—'}} · {{item.moveCategory}}{{item.power ? ' · 威力 ' + item.power : ''}}</view>
+    </view>
+  </view>
+
+  <block wx:if="{{selectedMove}}">
+    <view class="selected-card">
+      <view class="selected-name">{{selectedMove.nameZh || selectedMove.name}}</view>
+      <view class="selected-meta">{{selectedMove.typeNameZh || '—'}} · {{selectedMove.moveCategory}}{{selectedMove.power ? ' · 威力 ' + selectedMove.power : ''}}</view>
+      <view class="selected-desc">{{selectedMove.descriptionZh || selectedMove.description}}</view>
+    </view>
+
+    <view wx:if="{{finding}}" class="loading-state">正在查询精灵...</view>
+    <view wx:elif="{{pets.length === 0}}" class="empty-state">暂无可学该技能的精灵数据。</view>
+
+    <view wx:else class="pet-grid">
+      <view
+        wx:for="{{pets}}"
+        wx:key="_id"
+        class="pet-card"
+        data-id="{{item.petId}}"
+        bindtap="handlePetTap"
+      >
+        <view class="pet-cover">
+          <image
+            wx:if="{{coverMap[item.coverImage]}}"
+            src="{{coverMap[item.coverImage]}}"
+            mode="aspectFill"
+            class="pet-avatar"
+          />
+          <view wx:else class="pet-avatar-fallback">{{(item.nameZh || item.name).slice(0,1)}}</view>
+        </view>
+        <view class="pet-name">{{item.nameZh || item.name}}</view>
+        <view class="pet-id">#{{item.petId}}</view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+</view>

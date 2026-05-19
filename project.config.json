@@ -35,7 +35,11 @@
   "condition": {},
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "utils/data" },
+      { "type": "folder", "value": "utils/assets" },
+      { "type": "folder", "value": "scripts" }
+    ],
     "include": []
   },
   "editorSetting": {}

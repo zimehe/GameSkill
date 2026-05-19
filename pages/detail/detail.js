@@ -7,6 +7,50 @@ const {
   trackEvent
 } = require("../../utils/db");
 
+const CLOUD_URI_RE = /cloud:\/\/[a-zA-Z0-9_\-\.\/]+/g;
+
+function collectCloudIds(article) {
+  const ids = new Set();
+  const add = (value) => {
+    if (typeof value === "string" && value.indexOf("cloud://") === 0) ids.add(value);
+  };
+  add(article.coverImage);
+  (article.imageUrls || []).forEach(add);
+  if (typeof article.contentHtml === "string") {
+    (article.contentHtml.match(CLOUD_URI_RE) || []).forEach((id) => ids.add(id));
+  }
+  return Array.from(ids);
+}
+
+async function resolveCloudFileURLs(fileIds) {
+  if (!fileIds.length || !wx.cloud) return {};
+  try {
+    const res = await wx.cloud.getTempFileURL({ fileList: fileIds });
+    const map = {};
+    (res.fileList || []).forEach((item) => {
+      if (item && item.fileID && item.tempFileURL) map[item.fileID] = item.tempFileURL;
+    });
+    return map;
+  } catch (error) {
+    console.warn("解析 cloud:// 链接失败", error);
+    return {};
+  }
+}
+
+function rewriteArticleUrls(article, urlMap) {
+  if (!Object.keys(urlMap).length) return article;
+  let contentHtml = article.contentHtml || "";
+  Object.entries(urlMap).forEach(([fileID, url]) => {
+    contentHtml = contentHtml.split(fileID).join(url);
+  });
+  return {
+    ...article,
+    coverImage: urlMap[article.coverImage] || article.coverImage,
+    imageUrls: (article.imageUrls || []).map((id) => urlMap[id] || id),
+    contentHtml
+  };
+}
+
 Page({
   data: {
     article: null,
@@ -38,16 +82,20 @@ Page({
         return;
       }
 
-      const normalizedArticle = {
-        ...article,
-        imageUrls: article.imageUrls || [],
-        tags: article.tags || []
-      };
-      const [favorited, relatedArticles] = await Promise.all([
+      const cloudIds = collectCloudIds(article);
+      const [favorited, relatedArticles, , urlMap] = await Promise.all([
         isFavorite(article._id),
         getRelatedArticles(article, 3),
-        recordHistory(article._id)
+        recordHistory(article._id),
+        resolveCloudFileURLs(cloudIds)
       ]);
+
+      const rewritten = rewriteArticleUrls(article, urlMap);
+      const normalizedArticle = {
+        ...rewritten,
+        imageUrls: rewritten.imageUrls || [],
+        tags: rewritten.tags || []
+      };
 
       this.setData({
         article: normalizedArticle,

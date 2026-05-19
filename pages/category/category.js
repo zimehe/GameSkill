@@ -1,5 +1,28 @@
 const { getCategoryPageData } = require("../../utils/db");
 
+const DEDICATED_RK_PAGES = {
+  "cat-rk-pet-list": {
+    url: "/pages/rock-kingdom/pet-list/pet-list",
+    title: "精灵图鉴",
+    description: "支持按属性 / 关键词搜索 1000+ 精灵，进入查看技能、属性、蛋孵化"
+  },
+  "cat-rk-skill-list": {
+    url: "/pages/rock-kingdom/skill-list/skill-list",
+    title: "技能图鉴",
+    description: "全部技能按属性 / 类别筛选，威力、能量、效果一目了然"
+  },
+  "cat-rk-skill-pet-filter": {
+    url: "/pages/rock-kingdom/skill-filter/skill-filter",
+    title: "技能筛选精灵",
+    description: "输入技能名 → 反查所有可学该技能的精灵"
+  },
+  "cat-rk-counter-table": {
+    url: "/pages/rock-kingdom/type-counter/type-counter",
+    title: "属性克制速查表",
+    description: "18 × 18 克制网格，攻击 / 防御倍率一眼看穿"
+  }
+};
+
 Page({
   data: {
     gameSlug: "",
@@ -8,6 +31,8 @@ Page({
     articles: [],
     filteredArticles: [],
     activeCategoryId: "",
+    activeCategory: null,
+    dedicatedEntry: null,
     sortMode: "default",
     loading: true,
     errorMessage: ""
@@ -38,11 +63,14 @@ Page({
       }));
       const activeCategoryId = categories[0] ? categories[0]._id : "";
 
+      const activeCategory = categories.find((c) => c._id === activeCategoryId) || null;
       this.setData({
         game,
         categories,
         articles: normalizedArticles,
         activeCategoryId,
+        activeCategory,
+        dedicatedEntry: DEDICATED_RK_PAGES[activeCategoryId] || null,
         filteredArticles: this.filterArticles(normalizedArticles, activeCategoryId)
       });
 
@@ -74,10 +102,19 @@ Page({
 
   handleTabTap(event) {
     const { id } = event.currentTarget.dataset;
+    const activeCategory = this.data.categories.find((c) => c._id === id) || null;
     this.setData({
       activeCategoryId: id,
+      activeCategory,
+      dedicatedEntry: DEDICATED_RK_PAGES[id] || null,
       filteredArticles: this.filterArticles(this.data.articles, id)
     });
+  },
+
+  handleDedicatedTap() {
+    const { dedicatedEntry } = this.data;
+    if (!dedicatedEntry) return;
+    wx.navigateTo({ url: dedicatedEntry.url });
   },
 
   handleSortTap(event) {

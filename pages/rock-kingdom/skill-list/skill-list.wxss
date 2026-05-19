@@ -1,0 +1,164 @@
+.rk-page {
+  background:
+    linear-gradient(180deg, #1f3050 0%, #2a4067 280rpx, transparent 280rpx),
+    #f5f2ea;
+}
+
+.rk-head {
+  color: #fff8e9;
+}
+
+.eyebrow {
+  color: #a5cdff;
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+}
+
+.title {
+  margin-top: 16rpx;
+  font-size: 48rpx;
+  font-weight: 900;
+}
+
+.muted-line {
+  margin-top: 8rpx;
+  color: rgba(255, 248, 233, 0.7);
+  font-size: 24rpx;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  margin-top: 26rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 26rpx;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 18rpx 48rpx rgba(16, 22, 31, 0.18);
+}
+
+.search-input {
+  flex: 1;
+  color: #18212c;
+  font-size: 28rpx;
+}
+
+.search-button {
+  padding: 10rpx 22rpx;
+  border-radius: 999rpx;
+  background: #1f3050;
+  color: #fff8e9;
+  font-size: 24rpx;
+}
+
+.category-row {
+  display: flex;
+  margin-top: 22rpx;
+  padding: 8rpx;
+  border-radius: 22rpx;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.cat-pill {
+  flex: 1;
+  padding: 14rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #1f3050;
+  border-radius: 18rpx;
+}
+
+.cat-active {
+  background: #1f3050;
+  color: #fff8e9;
+  font-weight: 700;
+}
+
+.pill-row {
+  display: flex;
+  white-space: nowrap;
+  margin-top: 22rpx;
+  padding: 4rpx 0;
+}
+
+.pill {
+  display: inline-block;
+  flex-shrink: 0;
+  margin-right: 14rpx;
+  padding: 10rpx 24rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.85);
+  color: #1f3050;
+  font-size: 24rpx;
+}
+
+.pill-active {
+  background: #1f3050;
+  color: #fff8e9;
+}
+
+.sort-row {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.sort-count {
+  color: #66717f;
+  font-size: 22rpx;
+}
+
+.skill-list {
+  margin-top: 24rpx;
+}
+
+.skill-card {
+  margin-bottom: 18rpx;
+  padding: 24rpx 26rpx;
+  border-radius: 26rpx;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12rpx 30rpx rgba(31, 43, 58, 0.08);
+}
+
+.skill-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.skill-name {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #18212c;
+}
+
+.skill-id {
+  color: #b07a22;
+  font-size: 22rpx;
+}
+
+.skill-meta {
+  margin-top: 12rpx;
+}
+
+.skill-tag {
+  display: inline-block;
+  margin-right: 12rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 999rpx;
+  background: #fff6dd;
+  color: #8a5f1d;
+  font-size: 22rpx;
+}
+
+.skill-desc {
+  margin-top: 12rpx;
+  color: #66717f;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.finished-line {
+  margin-top: 32rpx;
+  text-align: center;
+  font-size: 22rpx;
+}

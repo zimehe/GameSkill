@@ -22,17 +22,24 @@
       </view>
     </scroll-view>
 
-    <view class="sort-row">
+    <view wx:if="{{dedicatedEntry}}" class="dedicated-card" bindtap="handleDedicatedTap">
+      <view class="dedicated-eyebrow">图鉴入口</view>
+      <view class="dedicated-title">{{dedicatedEntry.title}}</view>
+      <view class="dedicated-desc">{{dedicatedEntry.description}}</view>
+      <view class="dedicated-cta">进入图鉴 ›</view>
+    </view>
+
+    <view wx:if="{{!dedicatedEntry}}" class="sort-row">
       <view class="sort-pill {{sortMode === 'default' ? 'sort-active' : ''}}" data-mode="default" bindtap="handleSortTap">默认</view>
       <view class="sort-pill {{sortMode === 'latest' ? 'sort-active' : ''}}" data-mode="latest" bindtap="handleSortTap">最新</view>
       <view class="sort-pill {{sortMode === 'hot' ? 'sort-active' : ''}}" data-mode="hot" bindtap="handleSortTap">热门</view>
     </view>
 
-    <view wx:if="{{filteredArticles.length === 0}}" class="empty-state">
+    <view wx:if="{{!dedicatedEntry && filteredArticles.length === 0}}" class="empty-state">
       这个分类还没有攻略，先去云数据库补一篇吧。
     </view>
 
-    <view wx:else class="article-list">
+    <view wx:if="{{!dedicatedEntry && filteredArticles.length > 0}}" class="article-list">
       <view
         wx:for="{{filteredArticles}}"
         wx:key="_id"

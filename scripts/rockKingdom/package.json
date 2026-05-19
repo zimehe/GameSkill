@@ -1,0 +1,16 @@
+{
+  "name": "rock-kingdom-etl",
+  "version": "1.0.0",
+  "private": true,
+  "description": "把 utils/data + utils/assets 灌入 CloudBase 的本地 ETL 脚本",
+  "scripts": {
+    "derive": "node derive.js",
+    "upload-assets": "node uploadAssets.js",
+    "upload-data": "node uploadData.js",
+    "seed-articles": "node seedArticles.js",
+    "all": "node derive.js && node uploadAssets.js && node uploadData.js && node seedArticles.js"
+  },
+  "dependencies": {
+    "@cloudbase/node-sdk": "^3.7.0"
+  }
+}

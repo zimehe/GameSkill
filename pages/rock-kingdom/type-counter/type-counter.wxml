@@ -1,0 +1,50 @@
+<view class="rk-page page-shell">
+  <view class="rk-head">
+    <view class="eyebrow">洛克王国</view>
+    <view class="title">属性克制速查表</view>
+    <view class="muted-line">行：攻击属性，列：防御属性。点选某行可高亮整条克制关系。</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">加载中...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+
+  <scroll-view wx:else scroll-x="true" class="matrix-wrap">
+    <view class="matrix-inner">
+      <view class="matrix-row matrix-header">
+        <view class="corner-cell">攻\防</view>
+        <view
+          wx:for="{{headers}}"
+          wx:key="_id"
+          wx:for-item="h"
+          class="header-cell"
+        >{{h.nameZh}}</view>
+      </view>
+
+      <view
+        wx:for="{{rows}}"
+        wx:key="attacker._id"
+        wx:for-item="row"
+        wx:for-index="rowIdx"
+        class="matrix-row {{highlight === row.attacker.typeId ? 'row-highlight' : ''}}"
+      >
+        <view
+          class="row-head"
+          data-id="{{row.attacker.typeId}}"
+          bindtap="handleAttackerTap"
+        >{{row.attacker.nameZh}}</view>
+        <view
+          wx:for="{{row.cells}}"
+          wx:key="*this"
+          wx:for-item="cell"
+          class="matrix-cell {{cell.className}}"
+        >{{cell.label}}</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="legend">
+    <view class="legend-item"><view class="legend-swatch cell-strong"></view> ×2 克制</view>
+    <view class="legend-item"><view class="legend-swatch cell-weak"></view> ×0.5 抵抗</view>
+    <view class="legend-item"><view class="legend-swatch cell-neutral"></view> ×1 / —</view>
+  </view>
+</view>

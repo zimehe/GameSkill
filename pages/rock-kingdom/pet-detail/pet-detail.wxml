@@ -1,0 +1,70 @@
+<view class="rk-detail page-shell">
+  <view wx:if="{{loading}}" class="loading-state">加载中...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+
+  <block wx:elif="{{pet}}">
+    <view class="hero">
+      <view class="hero-cover">
+        <image wx:if="{{coverUrl}}" src="{{coverUrl}}" mode="aspectFill" class="hero-image" />
+        <view wx:else class="hero-fallback">{{(pet.nameZh || pet.name).slice(0,1)}}</view>
+      </view>
+      <view class="hero-info">
+        <view class="hero-name">{{pet.nameZh || pet.name}}</view>
+        <view class="hero-id">#{{pet.petId}}</view>
+        <view class="hero-types">
+          <view wx:if="{{pet.mainType}}" class="type-pill">{{pet.mainType.nameZh}}</view>
+          <view wx:if="{{pet.subType}}" class="type-pill">{{pet.subType.nameZh}}</view>
+        </view>
+        <view class="hero-meta">攻击倾向：{{pet.preferredAttackStyle || '—'}}</view>
+      </view>
+    </view>
+
+    <view class="tab-bar">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="id"
+        class="tab-item {{activeTab === item.id ? 'tab-active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="handleTabTap"
+      >{{item.label}}</view>
+    </view>
+
+    <block wx:if="{{activeTab === 'stats'}}">
+      <view class="stat-card">
+        <view class="stat-line"><text class="stat-name">体力</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.hp || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.hp}}</text></view>
+        <view class="stat-line"><text class="stat-name">物攻</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.phyAtk || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.phyAtk}}</text></view>
+        <view class="stat-line"><text class="stat-name">魔攻</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.magAtk || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.magAtk}}</text></view>
+        <view class="stat-line"><text class="stat-name">物防</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.phyDef || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.phyDef}}</text></view>
+        <view class="stat-line"><text class="stat-name">魔防</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.magDef || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.magDef}}</text></view>
+        <view class="stat-line"><text class="stat-name">速度</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.spd || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.spd}}</text></view>
+        <view class="stat-total">总点 {{pet.baseStats.total}}</view>
+      </view>
+    </block>
+
+    <block wx:elif="{{activeTab === 'skills'}}">
+      <view wx:if="{{moves.length === 0}}" class="empty-state">暂未抓取到技能数据。</view>
+      <view wx:else class="skill-list">
+        <view wx:for="{{moves}}" wx:key="_id" class="skill-card">
+          <view class="skill-name">{{item.nameZh || item.name}}</view>
+          <view class="skill-meta">
+            <text class="skill-tag">{{item.typeNameZh || '—'}}</text>
+            <text class="skill-tag">{{item.moveCategory}}</text>
+            <text class="skill-tag" wx:if="{{item.power}}">威力 {{item.power}}</text>
+            <text class="skill-tag" wx:if="{{item.energyCost !== undefined}}">能量 {{item.energyCost}}</text>
+          </view>
+          <view class="skill-desc">{{item.descriptionZh || item.description}}</view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:elif="{{activeTab === 'egg'}}">
+      <view wx:if="{{!pet.egg}}" class="empty-state">该精灵暂无蛋孵化数据。</view>
+      <view wx:else class="egg-card">
+        <view class="egg-line"><text class="egg-label">孵化时长</text><text class="egg-value">{{pet.egg.hatchData ? (pet.egg.hatchData / 3600) + ' 小时' : '—'}}</text></view>
+        <view class="egg-line"><text class="egg-label">重量</text><text class="egg-value">{{pet.egg.weightLow || '—'}} ~ {{pet.egg.weightHigh || '—'}} g</text></view>
+        <view class="egg-line"><text class="egg-label">身高</text><text class="egg-value">{{pet.egg.heightLow || '—'}} ~ {{pet.egg.heightHigh || '—'}} cm</text></view>
+        <view wx:if="{{pet.egg.preciousEggType}}" class="egg-line"><text class="egg-label">稀有蛋类型</text><text class="egg-value">{{pet.egg.preciousEggType}}</text></view>
+      </view>
+    </block>
+  </block>
+</view>

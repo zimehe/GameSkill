@@ -4,3 +4,8 @@ cloudfunctions/**/node_modules/
 private.config.json
 project.private.config.json
 .DS_Store
+utils/data/
+utils/assets/
+scripts/rockKingdom/output/
+scripts/rockKingdom/.env
+scripts/rockKingdom/node_modules/

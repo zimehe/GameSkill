@@ -5,6 +5,11 @@
     "pages/category/category",
     "pages/detail/detail",
     "pages/mine/mine",
+    "pages/rock-kingdom/pet-list/pet-list",
+    "pages/rock-kingdom/pet-detail/pet-detail",
+    "pages/rock-kingdom/skill-list/skill-list",
+    "pages/rock-kingdom/skill-filter/skill-filter",
+    "pages/rock-kingdom/type-counter/type-counter",
     "pages/admin/index/index",
     "pages/admin/article-list/article-list",
     "pages/admin/article-editor/article-editor"

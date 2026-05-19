@@ -1,0 +1,70 @@
+<view class="rk-page page-shell">
+  <view class="rk-head">
+    <view class="eyebrow">洛克王国</view>
+    <view class="title">技能图鉴</view>
+    <view class="muted-line">按属性 / 类别 / 关键词筛选技能。</view>
+    <view class="search-box">
+      <input
+        class="search-input"
+        placeholder="搜索技能名 / 效果描述"
+        value="{{keyword}}"
+        confirm-type="search"
+        bindinput="handleInput"
+        bindconfirm="submitSearch"
+      />
+      <view class="search-button" bindtap="submitSearch">搜索</view>
+    </view>
+  </view>
+
+  <view class="category-row">
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="cat-pill {{category === item.id ? 'cat-active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="handleCategoryTap"
+    >{{item.label}}</view>
+  </view>
+
+  <scroll-view class="pill-row" scroll-x="true" enable-flex="true">
+    <view
+      class="pill {{typeId === 0 ? 'pill-active' : ''}}"
+      data-id="0"
+      bindtap="handleTypeTap"
+    >全部属性</view>
+    <view
+      wx:for="{{types}}"
+      wx:key="_id"
+      class="pill {{typeId === item.typeId ? 'pill-active' : ''}}"
+      data-id="{{item.typeId}}"
+      bindtap="handleTypeTap"
+    >{{item.nameZh || item.name}}</view>
+  </scroll-view>
+
+  <view class="sort-row">
+    <view class="sort-count">共 {{total}} 个技能</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">加载中...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+  <view wx:elif="{{moves.length === 0}}" class="empty-state">未找到符合条件的技能。</view>
+
+  <view wx:else class="skill-list">
+    <view wx:for="{{moves}}" wx:key="_id" class="skill-card">
+      <view class="skill-head">
+        <view class="skill-name">{{item.nameZh || item.name}}</view>
+        <view class="skill-id">#{{item.moveId}}</view>
+      </view>
+      <view class="skill-meta">
+        <text class="skill-tag">{{item.typeNameZh || '—'}}</text>
+        <text class="skill-tag">{{item.moveCategory}}</text>
+        <text class="skill-tag" wx:if="{{item.power}}">威力 {{item.power}}</text>
+        <text class="skill-tag" wx:if="{{item.energyCost !== undefined}}">能量 {{item.energyCost}}</text>
+      </view>
+      <view class="skill-desc">{{item.descriptionZh || item.description}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loadingMore}}" class="loading-state">加载更多...</view>
+  <view wx:elif="{{finished && moves.length > 0}}" class="muted finished-line">— 已到底 —</view>
+</view>

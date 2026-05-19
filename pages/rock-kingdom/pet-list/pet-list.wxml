@@ -1,0 +1,82 @@
+<view class="rk-page page-shell">
+  <view class="rk-head">
+    <view class="eyebrow">洛克王国</view>
+    <view class="title">精灵图鉴</view>
+    <view class="muted-line">支持按属性 / 关键词筛选，按速度或总点排序</view>
+    <view class="search-box">
+      <input
+        class="search-input"
+        placeholder="搜索精灵名 / 拼音"
+        value="{{keyword}}"
+        confirm-type="search"
+        bindinput="handleInput"
+        bindconfirm="submitSearch"
+      />
+      <view class="search-button" bindtap="submitSearch">搜索</view>
+    </view>
+  </view>
+
+  <scroll-view class="pill-row" scroll-x="true" enable-flex="true">
+    <view
+      class="pill {{typeId === 0 ? 'pill-active' : ''}}"
+      data-id="0"
+      bindtap="handleTypeTap"
+    >全部</view>
+    <view
+      wx:for="{{types}}"
+      wx:key="_id"
+      class="pill {{typeId === item.typeId ? 'pill-active' : ''}}"
+      data-id="{{item.typeId}}"
+      bindtap="handleTypeTap"
+    >{{item.nameZh || item.name}}</view>
+  </scroll-view>
+
+  <view class="sort-row">
+    <view
+      wx:for="{{sorts}}"
+      wx:key="id"
+      class="sort-pill {{sortMode === item.id ? 'sort-active' : ''}}"
+      data-mode="{{item.id}}"
+      bindtap="handleSortTap"
+    >{{item.label}}</view>
+    <view class="sort-count">共 {{total}} 只</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">加载中...</view>
+  <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
+  <view wx:elif="{{pets.length === 0}}" class="empty-state">没有匹配的精灵，换个属性试试。</view>
+
+  <view wx:else class="pet-grid">
+    <view
+      wx:for="{{pets}}"
+      wx:key="_id"
+      class="pet-card"
+      data-id="{{item.petId}}"
+      bindtap="handlePetTap"
+    >
+      <view class="pet-cover">
+        <image
+          wx:if="{{coverMap[item.coverImage]}}"
+          src="{{coverMap[item.coverImage]}}"
+          mode="aspectFill"
+          class="pet-avatar"
+        />
+        <view wx:else class="pet-avatar-fallback">{{(item.nameZh || item.name).slice(0,1)}}</view>
+      </view>
+      <view class="pet-name">{{item.nameZh || item.name}}</view>
+      <view class="pet-id">#{{item.petId}}</view>
+      <view class="type-row">
+        <view wx:if="{{item.mainType}}" class="type-pill type-{{item.mainType.id}}">{{item.mainType.nameZh}}</view>
+        <view wx:if="{{item.subType}}" class="type-pill type-{{item.subType.id}}">{{item.subType.nameZh}}</view>
+      </view>
+      <view class="stat-row">
+        <view class="stat-item"><text class="stat-label">血</text><text class="stat-value">{{item.baseStats.hp}}</text></view>
+        <view class="stat-item"><text class="stat-label">速</text><text class="stat-value">{{item.baseStats.spd}}</text></view>
+        <view class="stat-item"><text class="stat-label">总</text><text class="stat-value">{{item.baseStats.total}}</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loadingMore}}" class="loading-state">加载更多...</view>
+  <view wx:elif="{{finished && pets.length > 0}}" class="muted finished-line">— 已到底 —</view>
+</view>
