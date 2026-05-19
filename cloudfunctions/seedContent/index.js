@@ -43,9 +43,12 @@ const games = [
 ];
 
 const categories = [
-  { _id: "cat-ww-build", gameSlug: "wuthering-waves", name: "角色养成", description: "全角色武器 / 声骸搭配列表", icon: "声", status: "published", sortOrder: 1 },
-  { _id: "cat-ww-starter", gameSlug: "wuthering-waves", name: "开荒必备", description: "主线流程 / 解密 / 声骸路线", icon: "荒", status: "published", sortOrder: 2 },
-  { _id: "cat-ww-data", gameSlug: "wuthering-waves", name: "数据图鉴", description: "武器属性 / 材料掉落表", icon: "数", status: "published", sortOrder: 3 },
+  { _id: "cat-ww-character-index", gameSlug: "wuthering-waves", name: "角色图鉴", description: "共鸣者定位 / 技能 / 培养优先级", icon: "角", status: "published", sortOrder: 1 },
+  { _id: "cat-ww-weapon-index", gameSlug: "wuthering-waves", name: "武器图鉴", description: "武器属性 / 适配角色 / 抽取建议", icon: "武", status: "published", sortOrder: 2 },
+  { _id: "cat-ww-echo-index", gameSlug: "wuthering-waves", name: "声骸图鉴", description: "声骸套装 / 主词条 / 获取位置", icon: "声", status: "published", sortOrder: 3 },
+  { _id: "cat-ww-character-stats", gameSlug: "wuthering-waves", name: "角色属性", description: "基础面板 / 突破材料 / 技能倍率", icon: "属", status: "published", sortOrder: 4 },
+  { _id: "cat-ww-gacha-plan", gameSlug: "wuthering-waves", name: "抽卡规划", description: "卡池节奏 / 星声预算 / 补强路线", icon: "抽", status: "published", sortOrder: 5 },
+  { _id: "cat-ww-build-stats", gameSlug: "wuthering-waves", name: "角色配装统计", description: "武器声骸使用率 / 队伍搭配统计", icon: "配", status: "published", sortOrder: 6 },
   { _id: "cat-sv-crop", gameSlug: "stardew-valley", name: "四季作物", description: "作物收益及成熟时间", icon: "作", status: "published", sortOrder: 1 },
   { _id: "cat-sv-gift", gameSlug: "stardew-valley", name: "村民好感", description: "全 NPC 最爱 / 喜欢礼物", icon: "礼", status: "published", sortOrder: 2 },
   { _id: "cat-sv-tool", gameSlug: "stardew-valley", name: "日常工具", description: "钓鱼时间表 / 矿洞攻略", icon: "工", status: "published", sortOrder: 3 },
@@ -55,9 +58,12 @@ const categories = [
 ];
 
 const articleTemplates = [
-  ["cat-ww-build", "wuthering-waves", "鸣潮", "全角色声骸与武器搭配速查", "一篇先跑通所有主 C、副 C、辅助的声骸和武器搭配占位攻略。", ["声骸", "武器", "角色"]],
-  ["cat-ww-starter", "wuthering-waves", "鸣潮", "新手开荒每日路线", "主线推进、体力消耗、声骸收集和地图解密的首周路线。", ["开荒", "每日", "路线"]],
-  ["cat-ww-data", "wuthering-waves", "鸣潮", "武器与突破材料掉落表", "用于承接后续材料表格、长图和掉落地点整理。", ["材料", "武器", "掉落"]],
+  ["cat-ww-character-index", "wuthering-waves", "鸣潮", "鸣潮角色图鉴速查", "按属性、定位和队伍功能整理共鸣者，方便快速判断培养优先级。", ["角色图鉴", "共鸣者", "定位"]],
+  ["cat-ww-weapon-index", "wuthering-waves", "鸣潮", "鸣潮武器图鉴与适配角色", "整理常用武器属性、特效、适配角色和抽取建议。", ["武器图鉴", "适配角色", "抽取建议"]],
+  ["cat-ww-echo-index", "wuthering-waves", "鸣潮", "鸣潮声骸图鉴与套装速查", "整理声骸套装、主词条选择、COST 搭配和获取位置。", ["声骸图鉴", "套装", "主词条"]],
+  ["cat-ww-character-stats", "wuthering-waves", "鸣潮", "鸣潮角色属性与突破材料表", "集中展示角色基础属性、突破材料、技能升级材料和关键倍率。", ["角色属性", "突破材料", "技能倍率"]],
+  ["cat-ww-gacha-plan", "wuthering-waves", "鸣潮", "鸣潮抽卡规划与星声预算", "按版本卡池、角色定位和账号缺口整理抽卡优先级。", ["抽卡规划", "星声", "卡池"]],
+  ["cat-ww-build-stats", "wuthering-waves", "鸣潮", "鸣潮角色配装统计速览", "统计热门角色的武器、声骸、词条和队伍搭配使用率。", ["角色配装统计", "武器使用率", "声骸搭配"]],
   ["cat-sv-crop", "stardew-valley", "星露谷物语", "四季作物收益速查", "春夏秋冬高收益作物、成熟时间和复种建议。", ["作物", "收益", "四季"]],
   ["cat-sv-gift", "stardew-valley", "星露谷物语", "全村民送礼好感表", "每位 NPC 的最爱、喜欢、生日和避雷礼物。", ["送礼", "好感", "NPC"]],
   ["cat-sv-tool", "stardew-valley", "星露谷物语", "钓鱼时间与矿洞 120 层路线", "按季节、天气、时间整理鱼类与矿洞推进策略。", ["钓鱼", "矿洞", "日常"]],
@@ -111,6 +117,18 @@ async function upsert(collectionName, docs) {
   }
 }
 
+async function removeDocs(collectionName, ids) {
+  const collection = db.collection(collectionName);
+
+  for (const id of ids) {
+    try {
+      await collection.doc(id).remove();
+    } catch (error) {
+      // Ignore missing legacy documents so the seed function stays idempotent.
+    }
+  }
+}
+
 exports.main = async () => {
   const articles = articleTemplates.map(buildArticle);
   const admins = [
@@ -126,6 +144,7 @@ exports.main = async () => {
   await upsert("categories", categories);
   await upsert("articles", articles);
   await upsert("admins", admins);
+  await removeDocs("categories", ["cat-ww-build", "cat-ww-starter", "cat-ww-data"]);
 
   return {
     ok: true,

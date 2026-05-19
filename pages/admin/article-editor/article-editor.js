@@ -5,7 +5,7 @@ const blankArticle = {
   title: "",
   gameSlug: "wuthering-waves",
   gameName: "鸣潮",
-  categoryId: "cat-ww-build",
+  categoryId: "cat-ww-character-index",
   summary: "",
   tagsText: "",
   coverImage: "",
