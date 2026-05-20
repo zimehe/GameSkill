@@ -1,8 +1,6 @@
 .detail-page {
   padding-bottom: 148rpx;
-  background:
-    radial-gradient(circle at 90% 0%, rgba(242, 198, 109, 0.28), transparent 32%),
-    #f5f2ea;
+  background: transparent;
 }
 
 .article-head {

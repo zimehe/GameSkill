@@ -1,7 +1,5 @@
 .rk-detail {
-  background:
-    linear-gradient(180deg, #2a1a3f 0%, #3b2960 320rpx, transparent 320rpx),
-    #f5f2ea;
+  background: transparent;
 }
 
 .hero {

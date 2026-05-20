@@ -1,18 +1,6 @@
 const { getGames } = require("../../utils/db");
 
 const COLLAPSED_GAME_LIMIT = 8;
-const GAME_MODULES = {
-  "rock-kingdom": [
-    {
-      id: "skill-filter",
-      title: "技能筛选精灵",
-      desc: "技能反查可学精灵",
-      badge: "技能反查",
-      mark: "筛",
-      url: "/pages/rock-kingdom/skill-filter/skill-filter"
-    }
-  ]
-};
 
 Page({
   data: {
@@ -83,12 +71,6 @@ Page({
     });
   },
 
-  handleModuleTap(event) {
-    const { url } = event.currentTarget.dataset;
-    if (!url) return;
-    wx.navigateTo({ url });
-  },
-
   toggleAllGames() {
     const showAllGames = !this.data.showAllGames;
     this.setData({
@@ -118,8 +100,7 @@ Page({
     return {
       ...game,
       gameInitial: game.name ? game.name.slice(0, 1) : "游",
-      safeThemeColor: game.themeColor || "#10161f",
-      modules: GAME_MODULES[game.slug] || []
+      safeThemeColor: game.themeColor || "#10161f"
     };
   }
 });

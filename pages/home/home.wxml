@@ -51,22 +51,6 @@
           <view class="game-arrow">›</view>
         </view>
 
-        <view wx:if="{{item.modules.length > 0}}" class="module-list">
-          <view
-            wx:for="{{item.modules}}"
-            wx:for-item="module"
-            wx:key="id"
-            class="module-chip"
-            data-url="{{module.url}}"
-            catchtap="handleModuleTap"
-          >
-            <view class="module-mark">{{module.mark}}</view>
-            <view class="module-copy">
-              <view class="module-title">{{module.title}}</view>
-              <view class="module-desc">{{module.desc}}</view>
-            </view>
-          </view>
-        </view>
       </view>
     </view>
 

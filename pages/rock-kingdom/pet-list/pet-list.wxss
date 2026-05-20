@@ -1,7 +1,5 @@
 .rk-page {
-  background:
-    linear-gradient(180deg, #2a1a3f 0%, #3b2960 280rpx, transparent 280rpx),
-    #f5f2ea;
+  background: transparent;
 }
 
 .rk-head {

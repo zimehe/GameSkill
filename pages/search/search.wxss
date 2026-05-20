@@ -1,7 +1,5 @@
 .search-page {
-  background:
-    linear-gradient(180deg, #10161f 0%, #182536 280rpx, transparent 280rpx),
-    #f5f2ea;
+  background: transparent;
 }
 
 .search-head {

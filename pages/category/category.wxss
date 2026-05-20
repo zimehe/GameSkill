@@ -1,7 +1,5 @@
 .category-page {
-  background:
-    linear-gradient(180deg, rgba(16, 22, 31, 0.96) 0%, rgba(16, 22, 31, 0.96) 260rpx, transparent 260rpx),
-    #f5f2ea;
+  background: transparent;
 }
 
 .game-header {
@@ -74,14 +72,14 @@
 }
 
 .module-head-title {
-  color: #18212c;
+  color: #fff8e9;
   font-size: 34rpx;
   font-weight: 900;
 }
 
 .module-head-note {
   margin-top: 8rpx;
-  color: #76808f;
+  color: rgba(255, 248, 233, 0.72);
   font-size: 23rpx;
   line-height: 1.45;
 }
