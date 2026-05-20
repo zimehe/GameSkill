@@ -95,7 +95,7 @@ Page({
         loadingMore: false,
         errorMessage:
           error.code === "CLOUD_ENV_NOT_CONFIGURED"
-            ? "云开发未配置时仅显示样例数据。"
+            ? "内容服务暂未准备好，请稍后再试。"
             : "技能列表加载失败。"
       });
     }

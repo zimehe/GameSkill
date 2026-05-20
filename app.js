@@ -3,13 +3,13 @@ App({
     appName: "云玩家游客图鉴",
     cloudEnvId: "cloud1-d7gr6v1ap412a239a",
     cloudReady: false,
-    useMockData: true,
+    useMockData: false,
     openid: "",
     adminTapCount: 0,
-    // 上传一张测试图片到云存储后，把返回的 fileID 的「cloud://…/」前缀（含末尾的 /）填到这里，
-    // 例如 "cloud://cloud1-d7gr6v1ap412a239a.7072-cloud1-d7gr6v1ap412a239a-1300xxxxxx/"。
-    // 设置后，洛克王国精灵/道具/技能图标会自动用 assetPath 拼出可显示的 fileID。
-    cloudFileIDPrefix: ""
+    // 云存储图片根路径。当前已上传到 webp/friends、webp/items。
+    cloudAssetRoot: "webp",
+    // 上传图片后复制任意 File ID，截取到资源根目录前（含末尾 /）。
+    cloudFileIDPrefix: "cloud://cloud1-d7gr6v1ap412a239a.636c-cloud1-d7gr6v1ap412a239a-1434282942/"
   },
 
   onLaunch() {
@@ -29,7 +29,6 @@ App({
     });
 
     this.globalData.cloudReady = true;
-    this.loadOpenId();
   },
 
   loadOpenId() {

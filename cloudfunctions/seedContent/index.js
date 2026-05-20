@@ -52,17 +52,10 @@ const categories = [
   { _id: "cat-sv-crop", gameSlug: "stardew-valley", name: "四季作物", description: "作物收益及成熟时间", icon: "作", status: "published", sortOrder: 1 },
   { _id: "cat-sv-gift", gameSlug: "stardew-valley", name: "村民好感", description: "全 NPC 最爱 / 喜欢礼物", icon: "礼", status: "published", sortOrder: 2 },
   { _id: "cat-sv-tool", gameSlug: "stardew-valley", name: "日常工具", description: "钓鱼时间表 / 矿洞攻略", icon: "工", status: "published", sortOrder: 3 },
-  { _id: "cat-rk-egg-size", gameSlug: "rock-kingdom", name: "蛋尺寸查询", description: "宠物蛋尺寸 / 孵化信息 / 查询索引", icon: "蛋", status: "published", sortOrder: 1 },
-  { _id: "cat-rk-egg-group-pair", gameSlug: "rock-kingdom", name: "蛋组配对", description: "蛋组关系 / 可配对精灵 / 遗传路线", icon: "组", status: "published", sortOrder: 2 },
-  { _id: "cat-rk-pvp-damage", gameSlug: "rock-kingdom", name: "PVP属性伤害计算", description: "属性克制 / 伤害倍率 / 对战计算", icon: "伤", status: "published", sortOrder: 3 },
-  { _id: "cat-rk-skill-pet-filter", gameSlug: "rock-kingdom", name: "技能筛选精灵", description: "按技能反查精灵 / 技能持有者", icon: "筛", status: "published", sortOrder: 4 },
-  { _id: "cat-rk-pet-list", gameSlug: "rock-kingdom", name: "精灵列表", description: "精灵基础资料 / 属性 / 编号索引", icon: "灵", status: "published", sortOrder: 5 },
-  { _id: "cat-rk-skill-list", gameSlug: "rock-kingdom", name: "技能列表", description: "技能属性 / 威力 / 效果说明", icon: "技", status: "published", sortOrder: 6 },
-  { _id: "cat-rk-team-list", gameSlug: "rock-kingdom", name: "阵容列表", description: "PVP 阵容 / 副本阵容 / 搭配思路", icon: "阵", status: "published", sortOrder: 7 },
-  { _id: "cat-rk-item-index", gameSlug: "rock-kingdom", name: "道具图鉴", description: "道具用途 / 获取方式 / 消耗场景", icon: "具", status: "published", sortOrder: 8 },
-  { _id: "cat-rk-counter-table", gameSlug: "rock-kingdom", name: "克制关系表", description: "属性克制 / 抵抗 / 免疫速查", icon: "克", status: "published", sortOrder: 9 },
-  { _id: "cat-rk-nature-traits", gameSlug: "rock-kingdom", name: "性格特点", description: "性格加成 / 推荐方向 / 培养建议", icon: "性", status: "published", sortOrder: 10 },
-  { _id: "cat-rk-skill-terms", gameSlug: "rock-kingdom", name: "技能词条", description: "技能效果词条 / 状态解释 / 机制说明", icon: "词", status: "published", sortOrder: 11 }
+  { _id: "cat-rk-pet-list", gameSlug: "rock-kingdom", name: "精灵列表", description: "精灵基础资料 / 属性 / 编号索引", icon: "灵", status: "published", sortOrder: 1 },
+  { _id: "cat-rk-skill-list", gameSlug: "rock-kingdom", name: "技能列表", description: "技能属性 / 威力 / 效果说明", icon: "技", status: "published", sortOrder: 2 },
+  { _id: "cat-rk-skill-pet-filter", gameSlug: "rock-kingdom", name: "技能筛选精灵", description: "按技能反查精灵 / 技能持有者", icon: "筛", status: "published", sortOrder: 3 },
+  { _id: "cat-rk-counter-table", gameSlug: "rock-kingdom", name: "克制关系表", description: "属性克制 / 抵抗 / 免疫速查", icon: "克", status: "published", sortOrder: 4 }
 ];
 
 const articleTemplates = [
@@ -75,17 +68,10 @@ const articleTemplates = [
   ["cat-sv-crop", "stardew-valley", "星露谷物语", "四季作物收益速查", "春夏秋冬高收益作物、成熟时间和复种建议。", ["作物", "收益", "四季"]],
   ["cat-sv-gift", "stardew-valley", "星露谷物语", "全村民送礼好感表", "每位 NPC 的最爱、喜欢、生日和避雷礼物。", ["送礼", "好感", "NPC"]],
   ["cat-sv-tool", "stardew-valley", "星露谷物语", "钓鱼时间与矿洞 120 层路线", "按季节、天气、时间整理鱼类与矿洞推进策略。", ["钓鱼", "矿洞", "日常"]],
-  ["cat-rk-egg-size", "rock-kingdom", "洛克王国", "洛克王国蛋尺寸查询表", "按宠物蛋尺寸、孵化信息和对应宠物整理查询索引。", ["蛋尺寸查询", "宠物蛋", "孵化"]],
-  ["cat-rk-egg-group-pair", "rock-kingdom", "洛克王国", "洛克王国蛋组配对速查", "整理蛋组关系、可配对精灵和遗传技能路线。", ["蛋组配对", "遗传", "精灵"]],
-  ["cat-rk-pvp-damage", "rock-kingdom", "洛克王国", "PVP 属性伤害计算入门", "按属性克制、技能类型和对战场景整理伤害计算思路。", ["PVP属性伤害计算", "属性克制", "伤害倍率"]],
-  ["cat-rk-skill-pet-filter", "rock-kingdom", "洛克王国", "按技能筛选精灵查询", "输入技能名后反查可学习或携带该技能的精灵。", ["技能筛选精灵", "技能反查", "精灵"]],
   ["cat-rk-pet-list", "rock-kingdom", "洛克王国", "洛克王国精灵列表", "整理精灵编号、属性、种族值、获取方式和推荐用途。", ["精灵列表", "宠物", "种族值"]],
   ["cat-rk-skill-list", "rock-kingdom", "洛克王国", "洛克王国技能列表", "按技能属性、威力、命中、PP 和效果整理技能图鉴。", ["技能列表", "技能属性", "效果"]],
-  ["cat-rk-team-list", "rock-kingdom", "洛克王国", "洛克王国阵容列表", "整理 PVP、天梯、副本和活动常用阵容搭配。", ["阵容列表", "PVP", "副本"]],
-  ["cat-rk-item-index", "rock-kingdom", "洛克王国", "洛克王国道具图鉴", "整理道具用途、获取方式、消耗场景和优先级。", ["道具图鉴", "获取方式", "消耗"]],
-  ["cat-rk-counter-table", "rock-kingdom", "洛克王国", "洛克王国克制关系表", "快速查询属性之间的克制、抵抗和弱点关系。", ["克制关系表", "属性", "弱点"]],
-  ["cat-rk-nature-traits", "rock-kingdom", "洛克王国", "洛克王国性格特点速查", "整理不同性格的属性倾向、推荐精灵和培养方向。", ["性格特点", "性格", "培养"]],
-  ["cat-rk-skill-terms", "rock-kingdom", "洛克王国", "洛克王国技能词条解释", "解释技能描述中的常见状态、机制词条和触发条件。", ["技能词条", "状态", "机制"]]
+  ["cat-rk-skill-pet-filter", "rock-kingdom", "洛克王国", "按技能筛选精灵查询", "输入技能名后反查可学习或携带该技能的精灵。", ["技能筛选精灵", "技能反查", "精灵"]],
+  ["cat-rk-counter-table", "rock-kingdom", "洛克王国", "洛克王国克制关系表", "快速查询属性之间的克制、抵抗和弱点关系。", ["克制关系表", "属性", "弱点"]]
 ];
 
 function buildArticle([categoryId, gameSlug, gameName, title, summary, tags], index) {
@@ -145,6 +131,14 @@ async function removeDocs(collectionName, ids) {
   }
 }
 
+async function removeArticlesByCategory(categoryIds) {
+  const collection = db.collection("articles");
+
+  for (const categoryId of categoryIds) {
+    await collection.where({ categoryId }).remove().catch(() => {});
+  }
+}
+
 exports.main = async () => {
   const articles = articleTemplates.map(buildArticle);
   const admins = [
@@ -162,6 +156,17 @@ exports.main = async () => {
   await upsert("admins", admins);
   await removeDocs("categories", ["cat-ww-build", "cat-ww-starter", "cat-ww-data"]);
   await removeDocs("categories", ["cat-rk-pet", "cat-rk-pve", "cat-rk-level"]);
+  const removedRockKingdomCategoryIds = [
+    "cat-rk-egg-size",
+    "cat-rk-egg-group-pair",
+    "cat-rk-pvp-damage",
+    "cat-rk-team-list",
+    "cat-rk-item-index",
+    "cat-rk-nature-traits",
+    "cat-rk-skill-terms"
+  ];
+  await removeDocs("categories", removedRockKingdomCategoryIds);
+  await removeArticlesByCategory(removedRockKingdomCategoryIds);
 
   return {
     ok: true,

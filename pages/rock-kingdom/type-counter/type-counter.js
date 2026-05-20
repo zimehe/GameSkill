@@ -41,7 +41,7 @@ Page({
         loading: false,
         errorMessage:
           error.code === "CLOUD_ENV_NOT_CONFIGURED"
-            ? "云开发未配置时显示 mock 中的 18 种属性。"
+            ? "内容服务暂未准备好，请稍后再试。"
             : "属性表加载失败。"
       });
     }

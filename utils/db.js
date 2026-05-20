@@ -212,10 +212,11 @@ async function searchArticles(keyword) {
   const query = String(keyword || "").trim().toLowerCase();
   if (!query) return [];
 
-  await trackEvent("search", { keyword: query });
+  trackEvent("search", { keyword: query });
 
   if (isMockMode()) {
     return getMockArticles().filter((article) => {
+      if (article.gameSlug !== "rock-kingdom") return false;
       const haystack = [
         article.title,
         article.summary,
@@ -233,6 +234,7 @@ async function searchArticles(keyword) {
   const { data } = await db.collection("articles")
     .where(_.and([
       { status: "published" },
+      { gameSlug: "rock-kingdom" },
       _.or([
         { title: regExp },
         { summary: regExp },
@@ -363,10 +365,15 @@ async function trackEvent(type, payload = {}) {
     return;
   }
 
-  await wx.cloud.callFunction({
-    name: "trackEvent",
-    data: { type, ...payload }
-  });
+  try {
+    await wx.cloud.callFunction({
+      name: "trackEvent",
+      data: { type, ...payload }
+    });
+  } catch (error) {
+    // 纯内容浏览模式下可以不部署统计云函数，埋点失败不影响主流程。
+    console.warn("统计云函数未部署，已跳过", error);
+  }
 }
 
 async function isAdmin() {

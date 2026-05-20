@@ -25,20 +25,76 @@ function ensureArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
-// 给一条记录补 coverImage：
-// - 如果 record 已经有 coverImage（含 cloud://），直接保留
-// - 否则用 cloudFileIDPrefix + 'rock-kingdom/' + assetPath 拼出 fileID
-function fillCoverImage(record) {
-  if (!record || record.coverImage) return record;
-  if (!record.assetPath) return record;
+function getFallbackInitial(record) {
+  const name = String((record && (record.nameZh || record.name || record.key)) || "?");
+  return name.charAt(0) || "?";
+}
+
+function buildCloudFileId(assetPath) {
+  if (!assetPath) return "";
   const prefix = getAppState().cloudFileIDPrefix || "";
-  if (!prefix) return record;
+  if (!prefix) return "";
   const normalized = prefix.endsWith("/") ? prefix : `${prefix}/`;
-  return { ...record, coverImage: `${normalized}rock-kingdom/${record.assetPath}` };
+  const assetRoot = String(getAppState().cloudAssetRoot || "rock-kingdom").replace(/^\/+|\/+$/g, "");
+  return `${normalized}${assetRoot}/${assetPath}`;
+}
+
+// 给一条记录补 coverImage：
+// - 只要存在 assetPath + cloudFileIDPrefix，就按当前配置重新拼 fileID
+// - 这样可以覆盖云数据库里历史写入的占位值或旧路径
+function fillCoverImage(record) {
+  if (!record) return record;
+  const next = { ...record };
+  if (!next.initial) {
+    next.initial = getFallbackInitial(next);
+  }
+  const configuredFileId = buildCloudFileId(next.assetPath);
+  if (configuredFileId) {
+    next.coverImage = configuredFileId;
+  }
+  return next;
 }
 
 function fillCoverList(list) {
   return list.map(fillCoverImage);
+}
+
+function isCloudFileId(value) {
+  return typeof value === "string" && value.indexOf("cloud://") === 0;
+}
+
+function isRemoteImageUrl(value) {
+  return typeof value === "string" && /^https?:\/\//.test(value);
+}
+
+async function resolveCoverList(list) {
+  const filled = fillCoverList(list);
+  const fileIds = Array.from(new Set(
+    filled
+      .map((item) => item.coverImage)
+      .filter(isCloudFileId)
+  ));
+
+  if (!fileIds.length) {
+    return filled.map((item) => ({
+      ...item,
+      displayCoverImage: isRemoteImageUrl(item.coverImage) ? item.coverImage : ""
+    }));
+  }
+
+  const urlMap = await resolveCloudUrls(fileIds);
+  return filled.map((item) => {
+    const tempUrl = urlMap[item.coverImage] || "";
+    return {
+      ...item,
+      displayCoverImage: isRemoteImageUrl(tempUrl) ? tempUrl : ""
+    };
+  });
+}
+
+async function resolveCoverItem(item) {
+  const list = await resolveCoverList(item ? [item] : []);
+  return list[0] || null;
 }
 
 function matchKeyword(item, keyword) {
@@ -83,7 +139,7 @@ async function listPets({ keyword = "", typeId = null, sortMode = "id", page = 1
     pool = pool.filter((p) => matchKeyword(p, safeKw));
     pool = sortPets(pool, sortMode);
     const start = (page - 1) * pageSize;
-    return { total: pool.length, list: fillCoverList(pool.slice(start, start + pageSize)) };
+    return { total: pool.length, list: await resolveCoverList(pool.slice(start, start + pageSize)) };
   }
 
   const db = getCloudDb();
@@ -116,7 +172,7 @@ async function listPets({ keyword = "", typeId = null, sortMode = "id", page = 1
     collection.where(where).orderBy(orderField, orderDir).skip((page - 1) * pageSize).limit(pageSize).get()
   ]);
 
-  return { total, list: fillCoverList(data) };
+  return { total, list: await resolveCoverList(data) };
 }
 
 async function getPet(petId) {
@@ -124,7 +180,7 @@ async function getPet(petId) {
   if (isMockMode()) {
     const pet = mock.pets.find((p) => p.petId === numericId) || null;
     const skills = mock.petSkills.find((p) => p.petId === numericId);
-    return pet ? fillCoverImage({ ...pet, skills: skills ? skills.movePoolIds : [] }) : null;
+    return pet ? resolveCoverItem({ ...pet, skills: skills ? skills.movePoolIds : [] }) : null;
   }
   const db = getCloudDb();
   const docId = `rk-pet-${numericId}`;
@@ -133,7 +189,7 @@ async function getPet(petId) {
     db.collection("rk_pet_skills").doc(`rk-pet-skills-${numericId}`).get().catch(() => ({ data: null }))
   ]);
   if (!petRes.data) return null;
-  return fillCoverImage({
+  return resolveCoverItem({
     _id: docId,
     ...petRes.data,
     skills: skillsRes.data ? (skillsRes.data.movePoolIds || []) : []
@@ -190,7 +246,7 @@ async function findPetsBySkill(moveId) {
     const petIds = mock.petSkills
       .filter((entry) => entry.movePoolIds.indexOf(targetId) >= 0)
       .map((entry) => entry.petId);
-    return fillCoverList(mock.pets.filter((p) => petIds.indexOf(p.petId) >= 0));
+    return resolveCoverList(mock.pets.filter((p) => petIds.indexOf(p.petId) >= 0));
   }
 
   const db = getCloudDb();
@@ -207,7 +263,7 @@ async function findPetsBySkill(moveId) {
   const results = await Promise.all(chunks.map((ids) =>
     db.collection("rk_pets").where({ petId: _.in(ids) }).limit(20).get().then((res) => res.data)
   ));
-  return fillCoverList(results.flat());
+  return resolveCoverList(results.flat());
 }
 
 async function getTypes() {
@@ -234,7 +290,7 @@ async function getTerms() {
 async function getItems({ page = 1, pageSize = 30 } = {}) {
   if (isMockMode()) {
     const start = (page - 1) * pageSize;
-    return { total: mock.items.length, list: fillCoverList(mock.items.slice(start, start + pageSize)) };
+    return { total: mock.items.length, list: await resolveCoverList(mock.items.slice(start, start + pageSize)) };
   }
   const db = getCloudDb();
   const collection = db.collection("rk_items");
@@ -242,26 +298,51 @@ async function getItems({ page = 1, pageSize = 30 } = {}) {
     collection.count(),
     collection.orderBy("itemId", "asc").skip((page - 1) * pageSize).limit(pageSize).get()
   ]);
-  return { total, list: fillCoverList(data) };
+  return { total, list: await resolveCoverList(data) };
 }
 
 async function resolveCloudUrls(fileIds) {
   const ids = ensureArray(fileIds).filter((id) => typeof id === "string" && id.indexOf("cloud://") === 0);
   if (!ids.length) return {};
   if (!wx.cloud) return {};
+  const map = {};
+  const failedIds = [];
+
   try {
     const res = await wx.cloud.getTempFileURL({ fileList: ids });
-    const map = {};
     (res.fileList || []).forEach((item) => {
       if (item && item.fileID && item.tempFileURL) {
         map[item.fileID] = item.tempFileURL;
+      } else if (item && item.fileID) {
+        console.warn("[rk] 图片 fileID 转链失败", item.fileID, item.status, item.errMsg);
+        failedIds.push(item.fileID);
       }
     });
-    return map;
   } catch (error) {
     console.warn("[rk] 转换 cloud:// 临时链接失败", error);
-    return {};
+    failedIds.push(...ids);
   }
+
+  const unresolvedIds = Array.from(new Set(ids.filter((id) => !map[id]).concat(failedIds)));
+  if (!unresolvedIds.length) return map;
+
+  try {
+    const res = await wx.cloud.callFunction({
+      name: "getRkImageUrls",
+      data: { fileList: unresolvedIds }
+    });
+    ((res.result && res.result.fileList) || []).forEach((item) => {
+      if (item && item.fileID && item.tempFileURL) {
+        map[item.fileID] = item.tempFileURL;
+      } else if (item && item.fileID) {
+        console.warn("[rk] 云函数图片转链失败", item.fileID, item.status, item.errMsg);
+      }
+    });
+  } catch (error) {
+    console.warn("[rk] getRkImageUrls 云函数不可用，图片将显示首字兜底", error);
+  }
+
+  return map;
 }
 
 module.exports = {

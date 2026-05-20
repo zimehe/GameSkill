@@ -1,22 +1,28 @@
-const { getGames, getLatestArticles, getPopularArticles } = require("../../utils/db");
+const { getGames } = require("../../utils/db");
 
-const FEATURED_GAME_LIMIT = 6;
 const COLLAPSED_GAME_LIMIT = 8;
+const GAME_MODULES = {
+  "rock-kingdom": [
+    {
+      id: "skill-filter",
+      title: "技能筛选精灵",
+      desc: "技能反查可学精灵",
+      badge: "技能反查",
+      mark: "筛",
+      url: "/pages/rock-kingdom/skill-filter/skill-filter"
+    }
+  ]
+};
 
 Page({
   data: {
     games: [],
-    featuredGames: [],
     visibleGames: [],
     matchedGameCount: 0,
-    latestArticles: [],
-    popularArticles: [],
     loading: true,
     errorMessage: "",
-    usingMockData: false,
     keyword: "",
     showAllGames: false,
-    adminTapCount: 0,
     adUnitId: "",
     showBannerAd: false
   },
@@ -29,26 +35,19 @@ Page({
     this.setData({ loading: true, errorMessage: "" });
 
     try {
-      const [games, latestArticles, popularArticles] = await Promise.all([
-        getGames(),
-        getLatestArticles(3),
-        getPopularArticles(3)
-      ]);
+      const games = await getGames();
       const normalizedGames = games.map(this.normalizeGame);
       const gameView = this.buildGameView(normalizedGames, this.data.keyword, this.data.showAllGames);
       this.setData({
         games: normalizedGames,
-        ...gameView,
-        latestArticles,
-        popularArticles,
-        usingMockData: getApp().globalData.useMockData
+        ...gameView
       });
     } catch (error) {
       console.error("读取游戏列表失败", error);
       this.setData({
         errorMessage: error.code === "CLOUD_ENV_NOT_CONFIGURED"
-          ? "云开发环境还没配置。请在 app.js 填入 cloudEnvId，创建 games、categories、articles 集合后重新编译。"
-          : "暂时无法读取攻略库，请检查云开发环境和数据库集合。"
+          ? "内容服务暂未准备好，请稍后再试。"
+          : "暂时无法读取攻略库，请稍后再试。"
       });
     } finally {
       this.setData({ loading: false });
@@ -84,17 +83,10 @@ Page({
     });
   },
 
-  openArticle(event) {
-    const { id } = event.currentTarget.dataset;
-    if (!id) return;
-
-    wx.navigateTo({
-      url: `/pages/detail/detail?id=${id}`
-    });
-  },
-
-  openMine() {
-    wx.navigateTo({ url: "/pages/mine/mine" });
+  handleModuleTap(event) {
+    const { url } = event.currentTarget.dataset;
+    if (!url) return;
+    wx.navigateTo({ url });
   },
 
   toggleAllGames() {
@@ -117,7 +109,6 @@ Page({
     const shouldShowAll = showAllGames || !!normalizedKeyword;
 
     return {
-      featuredGames: games.slice(0, FEATURED_GAME_LIMIT),
       visibleGames: shouldShowAll ? matchedGames : matchedGames.slice(0, COLLAPSED_GAME_LIMIT),
       matchedGameCount: matchedGames.length
     };
@@ -127,18 +118,8 @@ Page({
     return {
       ...game,
       gameInitial: game.name ? game.name.slice(0, 1) : "游",
-      safeThemeColor: game.themeColor || "#10161f"
+      safeThemeColor: game.themeColor || "#10161f",
+      modules: GAME_MODULES[game.slug] || []
     };
-  },
-
-  handleTitleTap() {
-    const next = this.data.adminTapCount + 1;
-    if (next >= 5) {
-      this.setData({ adminTapCount: 0 });
-      wx.navigateTo({ url: "/pages/admin/index/index" });
-      return;
-    }
-
-    this.setData({ adminTapCount: next });
   }
 });

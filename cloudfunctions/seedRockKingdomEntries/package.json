@@ -1,0 +1,9 @@
+{
+  "name": "seedRockKingdomEntries",
+  "version": "1.0.0",
+  "description": "Seed Rock Kingdom game/category/article entry documents",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

@@ -80,6 +80,13 @@ Page({
       });
       const merged = append ? this.data.pets.concat(list) : list;
       const finished = merged.length >= total;
+      if (!append && list[0]) {
+        console.log("[pet-list] first cover", {
+          assetPath: list[0].assetPath,
+          coverImage: list[0].coverImage,
+          displayCoverImage: list[0].displayCoverImage
+        });
+      }
 
       this.setData({
         pets: merged,
@@ -95,7 +102,7 @@ Page({
         loadingMore: false,
         errorMessage:
           error.code === "CLOUD_ENV_NOT_CONFIGURED"
-            ? "云开发未配置时仅显示样例数据，请在 app.js 填入 cloudEnvId 或开启 useMockData。"
+            ? "内容服务暂未准备好，请稍后再试。"
             : "精灵列表加载失败，请稍后再试。"
       });
     }

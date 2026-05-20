@@ -1,15 +1,15 @@
 <view class="home-page">
   <view class="hero">
     <view class="eyebrow">V2 GUIDEBOOK</view>
-    <view class="title" bindtap="handleTitleTap">云玩家游客图鉴</view>
-    <view class="subtitle">三款热门游戏的速查工具书，查完即走。</view>
+    <view class="title">云玩家游客图鉴</view>
+    <view class="subtitle">多游戏图鉴工具书，按游戏归类入口，查完即走。</view>
   </view>
 
   <view class="search-card">
     <view class="search-icon">⌕</view>
     <input
       class="search-input"
-      placeholder="搜角色、作物、宠物、材料..."
+      placeholder="搜游戏、精灵、技能、属性..."
       value="{{keyword}}"
       confirm-type="search"
       bindinput="handleSearchInput"
@@ -18,48 +18,14 @@
     <view class="search-action">搜索</view>
   </view>
 
-  <view wx:if="{{usingMockData}}" class="demo-tip">
-    当前为本地模拟数据，可先体验完整操作流程。
-  </view>
-
   <view wx:if="{{loading}}" class="loading-state">正在读取攻略库...</view>
   <view wx:elif="{{errorMessage}}" class="empty-state">{{errorMessage}}</view>
 
   <block wx:else>
-    <view class="quick-row">
-      <view class="quick-card" bindtap="openMine">
-        <view class="quick-title">我的收藏</view>
-        <view class="quick-desc">继续看上次查过的攻略</view>
-      </view>
-      <view class="quick-card muted-card" bindtap="submitSearch">
-        <view class="quick-title">全站搜索</view>
-        <view class="quick-desc">按标签和标题快速定位</view>
-      </view>
-    </view>
-
-    <view class="section-head">
-      <view class="section-title">常用游戏</view>
-      <view class="section-note">横滑快速进入</view>
-    </view>
-    <scroll-view class="featured-scroll" scroll-x enhanced show-scrollbar="{{false}}">
-      <view
-        wx:for="{{featuredGames}}"
-        wx:key="slug"
-        class="featured-game"
-        style="background: {{item.safeThemeColor}};"
-        data-slug="{{item.slug}}"
-        bindtap="handleGameTap"
-      >
-        <view class="featured-mark">{{item.gameInitial}}</view>
-        <view class="featured-name">{{item.name}}</view>
-        <view class="featured-subtitle">{{item.subtitle}}</view>
-      </view>
-    </scroll-view>
-
     <view class="section-head library-head">
       <view>
         <view class="section-title">游戏库</view>
-        <view class="section-note">已匹配 {{matchedGameCount}} 款游戏</view>
+        <view class="section-note">常用工具会显示在对应游戏下方</view>
       </view>
       <view wx:if="{{matchedGameCount > visibleGames.length || showAllGames}}" class="toggle-games" bindtap="toggleAllGames">
         {{showAllGames ? '收起' : '展开全部'}}
@@ -70,50 +36,43 @@
       没找到对应游戏，换个关键词试试。
     </view>
 
-    <view wx:else class="game-library">
+    <view wx:else class="game-list">
       <view
         wx:for="{{visibleGames}}"
         wx:key="slug"
         class="game-tile"
-        data-slug="{{item.slug}}"
-        bindtap="handleGameTap"
       >
-        <view class="tile-mark" style="background: {{item.safeThemeColor}};">{{item.gameInitial}}</view>
-        <view class="tile-copy">
-          <view class="tile-name">{{item.name}}</view>
-          <view class="tile-subtitle">{{item.subtitle}}</view>
+        <view class="game-main" data-slug="{{item.slug}}" bindtap="handleGameTap">
+          <view class="tile-mark" style="background: {{item.safeThemeColor}};">{{item.gameInitial}}</view>
+          <view class="tile-copy">
+            <view class="tile-name">{{item.name}}</view>
+            <view class="tile-subtitle">{{item.subtitle}}</view>
+          </view>
+          <view class="game-arrow">›</view>
+        </view>
+
+        <view wx:if="{{item.modules.length > 0}}" class="module-list">
+          <view
+            wx:for="{{item.modules}}"
+            wx:for-item="module"
+            wx:key="id"
+            class="module-chip"
+            data-url="{{module.url}}"
+            catchtap="handleModuleTap"
+          >
+            <view class="module-mark">{{module.mark}}</view>
+            <view class="module-copy">
+              <view class="module-title">{{module.title}}</view>
+              <view class="module-desc">{{module.desc}}</view>
+            </view>
+          </view>
         </view>
       </view>
     </view>
 
-    <view class="section-title">热门攻略</view>
-    <view class="compact-list">
-      <view
-        wx:for="{{popularArticles}}"
-        wx:key="_id"
-        class="compact-card"
-        data-id="{{item._id}}"
-        bindtap="openArticle"
-      >
-        <view class="compact-title">{{item.title}}</view>
-        <view class="compact-meta">{{item.gameName}} · {{item.viewCount}} 次浏览</view>
-      </view>
-    </view>
-
-    <view class="section-title">最近更新</view>
-    <view class="compact-list">
-      <view
-        wx:for="{{latestArticles}}"
-        wx:key="_id"
-        class="compact-card"
-        data-id="{{item._id}}"
-        bindtap="openArticle"
-      >
-        <view class="compact-title">{{item.title}}</view>
-        <view class="compact-meta">{{item.gameName}} · 更新于 {{item.updatedAt}}</view>
-      </view>
-    </view>
   </block>
+
+  <view class="version-footer">GuideBook v1.0.0</view>
 
   <view wx:if="{{showBannerAd}}" class="ad-safe-space"></view>
   <view wx:if="{{showBannerAd}}" class="banner-ad-wrap">

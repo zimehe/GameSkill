@@ -52,12 +52,12 @@
       >
         <view class="pet-cover">
           <image
-            wx:if="{{item.coverImage}}"
-            src="{{item.coverImage}}"
+            wx:if="{{item.displayCoverImage}}"
+            src="{{item.displayCoverImage}}"
             mode="aspectFill"
             class="pet-avatar"
           />
-          <view wx:else class="pet-avatar-fallback">{{(item.nameZh || item.name).slice(0,1)}}</view>
+          <view wx:else class="pet-avatar-fallback">{{item.initial}}</view>
         </view>
         <view class="pet-name">{{item.nameZh || item.name}}</view>
         <view class="pet-id">#{{item.petId}}</view>

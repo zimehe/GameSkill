@@ -1,11 +1,11 @@
 <view class="search-page page-shell">
   <view class="search-head">
-    <view class="eyebrow">全站检索</view>
-    <view class="title">找到你要的攻略</view>
+    <view class="eyebrow">图鉴检索</view>
+    <view class="title">搜索图鉴内容</view>
     <view class="search-box">
       <input
         class="search-input"
-        placeholder="输入角色、宠物、作物、材料"
+        placeholder="输入游戏、精灵、技能、属性"
         value="{{keyword}}"
         confirm-type="search"
         bindinput="handleInput"

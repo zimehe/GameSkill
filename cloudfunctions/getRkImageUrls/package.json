@@ -1,0 +1,9 @@
+{
+  "name": "getRkImageUrls",
+  "version": "1.0.0",
+  "description": "Resolve Rock Kingdom cloud storage file IDs to temporary URLs",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

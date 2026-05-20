@@ -11,17 +11,9 @@
       <view class="tag-row">
         <view wx:for="{{article.tags}}" wx:key="*this" class="tag">{{item}}</view>
       </view>
-      <view class="stat-row">
-        <view>{{article.viewCount}} 浏览</view>
-        <view>{{article.favoriteCount}} 收藏</view>
-        <view>{{article.shareCount}} 分享</view>
-      </view>
     </view>
 
     <view class="action-row">
-      <view class="action-button {{favorited ? 'action-active' : ''}}" bindtap="toggleFavorite">
-        {{favorited ? '已收藏' : '收藏'}}
-      </view>
       <button class="share-button" open-type="share">分享</button>
       <view class="action-button" bindtap="copyTitle">复制标题</view>
     </view>

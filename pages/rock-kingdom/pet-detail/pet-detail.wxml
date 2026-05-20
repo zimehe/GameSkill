@@ -5,8 +5,8 @@
   <block wx:elif="{{pet}}">
     <view class="hero">
       <view class="hero-cover">
-        <image wx:if="{{pet.coverImage}}" src="{{pet.coverImage}}" mode="aspectFill" class="hero-image" />
-        <view wx:else class="hero-fallback">{{(pet.nameZh || pet.name).slice(0,1)}}</view>
+        <image wx:if="{{pet.displayCoverImage}}" src="{{pet.displayCoverImage}}" mode="aspectFill" class="hero-image" />
+        <view wx:else class="hero-fallback">{{pet.initial}}</view>
       </view>
       <view class="hero-info">
         <view class="hero-name">{{pet.nameZh || pet.name}}</view>
@@ -31,12 +31,13 @@
 
     <block wx:if="{{activeTab === 'stats'}}">
       <view class="stat-card">
-        <view class="stat-line"><text class="stat-name">体力</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.hp || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.hp}}</text></view>
-        <view class="stat-line"><text class="stat-name">物攻</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.phyAtk || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.phyAtk}}</text></view>
-        <view class="stat-line"><text class="stat-name">魔攻</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.magAtk || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.magAtk}}</text></view>
-        <view class="stat-line"><text class="stat-name">物防</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.phyDef || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.phyDef}}</text></view>
-        <view class="stat-line"><text class="stat-name">魔防</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.magDef || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.magDef}}</text></view>
-        <view class="stat-line"><text class="stat-name">速度</text><text class="stat-bar-wrap"><view class="stat-bar" style="width:{{(pet.baseStats.spd || 0) * 100 / 200}}%"></view></text><text class="stat-num">{{pet.baseStats.spd}}</text></view>
+        <view wx:for="{{statRows}}" wx:key="key" class="stat-line">
+          <text class="stat-name">{{item.label}}</text>
+          <view class="stat-bar-wrap">
+            <view class="stat-bar" style="width: {{item.barWidth}};"></view>
+          </view>
+          <text class="stat-num">{{item.value}}</text>
+        </view>
         <view class="stat-total">总点 {{pet.baseStats.total}}</view>
       </view>
     </block>

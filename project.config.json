@@ -38,7 +38,8 @@
     "ignore": [
       { "type": "folder", "value": "utils/data" },
       { "type": "folder", "value": "utils/assets" },
-      { "type": "folder", "value": "scripts" }
+      { "type": "folder", "value": "scripts" },
+      { "type": "folder", "value": "cloudfunctions/rkImport/data" }
     ],
     "include": []
   },

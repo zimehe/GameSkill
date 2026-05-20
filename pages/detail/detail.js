@@ -1,10 +1,6 @@
 const {
   getArticle,
-  getRelatedArticles,
-  isFavorite,
-  toggleFavorite,
-  recordHistory,
-  trackEvent
+  getRelatedArticles
 } = require("../../utils/db");
 
 const CLOUD_URI_RE = /cloud:\/\/[a-zA-Z0-9_\-\.\/]+/g;
@@ -51,11 +47,19 @@ function rewriteArticleUrls(article, urlMap) {
   };
 }
 
+async function optionalTask(task, fallback, label) {
+  try {
+    return await task();
+  } catch (error) {
+    console.warn(`${label}失败，已跳过`, error);
+    return fallback;
+  }
+}
+
 Page({
   data: {
     article: null,
     relatedArticles: [],
-    favorited: false,
     loading: true,
     errorMessage: ""
   },
@@ -83,11 +87,9 @@ Page({
       }
 
       const cloudIds = collectCloudIds(article);
-      const [favorited, relatedArticles, , urlMap] = await Promise.all([
-        isFavorite(article._id),
-        getRelatedArticles(article, 3),
-        recordHistory(article._id),
-        resolveCloudFileURLs(cloudIds)
+      const [relatedArticles, urlMap] = await Promise.all([
+        optionalTask(() => getRelatedArticles(article, 3), [], "读取相关推荐"),
+        optionalTask(() => resolveCloudFileURLs(cloudIds), {}, "解析文章图片")
       ]);
 
       const rewritten = rewriteArticleUrls(article, urlMap);
@@ -99,7 +101,6 @@ Page({
 
       this.setData({
         article: normalizedArticle,
-        favorited,
         relatedArticles
       });
       wx.setNavigationBarTitle({ title: article.title || "攻略详情" });
@@ -107,8 +108,8 @@ Page({
       console.error("读取文章详情失败", error);
       this.setData({
         errorMessage: error.code === "CLOUD_ENV_NOT_CONFIGURED"
-          ? "云开发环境还没配置。请先在 app.js 填入 cloudEnvId，再打开文章详情。"
-          : "攻略加载失败，请检查云数据库权限和文章数据。"
+          ? "内容服务暂未准备好，请稍后再试。"
+          : "攻略加载失败，请稍后再试。"
       });
     } finally {
       this.setData({ loading: false });
@@ -136,17 +137,6 @@ Page({
     wx.redirectTo({ url: "/pages/home/home" });
   },
 
-  async toggleFavorite() {
-    if (!this.data.article) return;
-
-    const result = await toggleFavorite(this.data.article._id);
-    this.setData({ favorited: result.favorited });
-    wx.showToast({
-      title: result.favorited ? "已收藏" : "已取消",
-      icon: "success"
-    });
-  },
-
   copyTitle() {
     if (!this.data.article) return;
 
@@ -165,10 +155,6 @@ Page({
 
   onShareAppMessage() {
     const article = this.data.article || {};
-    if (article._id) {
-      trackEvent("share", { articleId: article._id });
-    }
-
     return {
       title: article.title || "云玩家游客图鉴",
       path: `/pages/detail/detail?id=${article._id || ""}`

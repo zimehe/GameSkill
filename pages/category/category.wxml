@@ -9,6 +9,31 @@
       <view class="game-subtitle">{{game.subtitle}}</view>
     </view>
 
+    <block wx:if="{{isRockKingdom}}">
+      <view class="module-section">
+        <view class="module-head">
+          <view class="module-head-title">图鉴工具</view>
+          <view class="module-head-note">点卡片快速进入对应工具</view>
+        </view>
+
+        <view class="module-grid">
+          <view
+            wx:for="{{moduleEntries}}"
+            wx:key="_id"
+            class="module-card"
+            data-url="{{item.url}}"
+            bindtap="handleModuleTap"
+          >
+            <view class="module-mark">{{item.mark || item.icon}}</view>
+            <view class="module-title">{{item.title || item.name}}</view>
+            <view class="module-desc">{{item.description}}</view>
+            <view class="module-cta">进入 ›</view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
     <scroll-view class="tabs" scroll-x enhanced show-scrollbar="{{false}}">
       <view
         wx:for="{{categories}}"
@@ -22,24 +47,16 @@
       </view>
     </scroll-view>
 
-    <view wx:if="{{dedicatedEntry}}" class="dedicated-card" bindtap="handleDedicatedTap">
-      <view class="dedicated-eyebrow">图鉴入口</view>
-      <view class="dedicated-title">{{dedicatedEntry.title}}</view>
-      <view class="dedicated-desc">{{dedicatedEntry.description}}</view>
-      <view class="dedicated-cta">进入图鉴 ›</view>
-    </view>
-
-    <view wx:if="{{!dedicatedEntry}}" class="sort-row">
+    <view class="sort-row">
       <view class="sort-pill {{sortMode === 'default' ? 'sort-active' : ''}}" data-mode="default" bindtap="handleSortTap">默认</view>
       <view class="sort-pill {{sortMode === 'latest' ? 'sort-active' : ''}}" data-mode="latest" bindtap="handleSortTap">最新</view>
-      <view class="sort-pill {{sortMode === 'hot' ? 'sort-active' : ''}}" data-mode="hot" bindtap="handleSortTap">热门</view>
     </view>
 
-    <view wx:if="{{!dedicatedEntry && filteredArticles.length === 0}}" class="empty-state">
-      这个分类还没有攻略，先去云数据库补一篇吧。
+    <view wx:if="{{filteredArticles.length === 0}}" class="empty-state">
+      这个分类还没有内容，稍后再来看看。
     </view>
 
-    <view wx:if="{{!dedicatedEntry && filteredArticles.length > 0}}" class="article-list">
+    <view wx:if="{{filteredArticles.length > 0}}" class="article-list">
       <view
         wx:for="{{filteredArticles}}"
         wx:key="_id"
@@ -56,9 +73,10 @@
           <view class="tag-row">
             <view wx:for="{{item.tags}}" wx:key="*this" class="tag">{{item}}</view>
           </view>
-          <view class="article-meta">{{item.updatedAt}} · {{item.viewCount}} 浏览</view>
+          <view class="article-meta">更新于 {{item.updatedAt}}</view>
         </view>
       </view>
     </view>
+    </block>
   </block>
 </view>

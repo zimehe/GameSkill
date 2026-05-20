@@ -34,7 +34,7 @@ Page({
         searching: false,
         errorMessage:
           error.code === "CLOUD_ENV_NOT_CONFIGURED"
-            ? "云开发未配置时仅可在 mock 技能中筛选。"
+            ? "内容服务暂未准备好，请稍后再试。"
             : "搜索技能失败。"
       });
     }
